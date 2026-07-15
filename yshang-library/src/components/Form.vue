@@ -121,46 +121,52 @@
             </button>
           </div>
         </form>
-      </div>
-    </div>
-
-    <div
-      v-if="submittedCards.length"
-      class="row mt-5"
-    >
-      <div class="d-flex flex-wrap justify-content-start">
         <div
-          v-for="(card, index) in submittedCards"
-          :key="index"
-          class="card m-2"
-          style="width: 18rem"
+          v-if="submittedCards.length > 0"
+          class="row mt-5"
         >
-          <div class="card-header">
-            User Information
+          <div class="col-12">
+            <DataTable
+              :value="submittedCards"
+              stripedRows
+              showGridlines
+              paginator
+              :rows="5"
+              responsiveLayout="scroll"
+              tableStyle="min-width: 50rem"
+            >
+              <Column
+                field="username"
+                header="Username"
+                sortable
+              />
+
+              <Column
+                field="password"
+                header="Password"
+              />
+
+              <Column
+                header="Australian Resident"
+                sortable
+              >
+                <template #body="{ data }">
+                  {{ data.isAustralian ? 'Yes' : 'No' }}
+                </template>
+              </Column>
+
+              <Column
+                field="gender"
+                header="Gender"
+                sortable
+              />
+
+              <Column
+                field="reason"
+                header="Reason"
+              />
+            </DataTable>
           </div>
-
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              Username: {{ card.username }}
-            </li>
-
-            <li class="list-group-item">
-              Password: {{ card.password }}
-            </li>
-
-            <li class="list-group-item">
-              Australian Resident:
-              {{ card.isAustralian ? 'Yes' : 'No' }}
-            </li>
-
-            <li class="list-group-item">
-              Gender: {{ card.gender }}
-            </li>
-
-            <li class="list-group-item">
-              Reason: {{ card.reason }}
-            </li>
-          </ul>
         </div>
       </div>
     </div>
@@ -169,6 +175,8 @@
 
 <script setup>
 import { ref } from 'vue'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 
 const createEmptyForm = () => ({
   username: '',
