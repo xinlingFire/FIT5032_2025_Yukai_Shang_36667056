@@ -33,7 +33,8 @@
                 class="form-control"
                 id="password"
                 required
-                minlength="8"
+                minlength="4"
+                maxlength="10"
                 />
             </div>
         </div>
