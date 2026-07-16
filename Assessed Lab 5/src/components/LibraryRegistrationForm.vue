@@ -9,10 +9,110 @@ const formData = ref({
   confirmPassword: '',
   isAustralian: false,
   reason: '',
-  gender: ''
+  gender: '',
+  suburb: 'Clayton'
 })
 
 const submittedCards = ref([])
+
+const errors = ref({
+  username: null,
+  password: null,
+  confirmPassword: null,
+  resident: null,
+  gender: null,
+  reason: null
+})
+
+const validateName = (blur) => {
+  if (formData.value.username.length < 3) {
+    if (blur) {
+      errors.value.username =
+        'Name must be at least 3 characters'
+    }
+  } else {
+    errors.value.username = null
+  }
+}
+
+const validatePassword = (blur) => {
+  const password = formData.value.password
+  const minLength = 8
+  const hasUppercase = /[A-Z]/.test(password)
+  const hasLowercase = /[a-z]/.test(password)
+  const hasNumber = /\d/.test(password)
+  const hasSpecialChar =
+    /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+  if (password.length < minLength) {
+    if (blur) {
+      errors.value.password =
+        `Password must be at least ${minLength} characters long.`
+    }
+  } else if (!hasUppercase) {
+    if (blur) {
+      errors.value.password =
+        'Password must contain at least one uppercase letter.'
+    }
+  } else if (!hasLowercase) {
+    if (blur) {
+      errors.value.password =
+        'Password must contain at least one lowercase letter.'
+    }
+  } else if (!hasNumber) {
+    if (blur) {
+      errors.value.password =
+        'Password must contain at least one number.'
+    }
+  } else if (!hasSpecialChar) {
+    if (blur) {
+      errors.value.password =
+        'Password must contain at least one special character.'
+    }
+  } else {
+    errors.value.password = null
+  }
+}
+
+const validateConfirmPassword = (blur) => {
+  const password = formData.value.password
+  const confirmPassword = formData.value.confirmPassword
+
+  if (!confirmPassword) {
+    if (blur) {
+      errors.value.confirmPassword =
+        'Please confirm your password.'
+    }
+  } else if (confirmPassword !== password) {
+    if (blur || errors.value.confirmPassword) {
+      errors.value.confirmPassword =
+        'Passwords do not match.'
+    }
+  } else {
+    errors.value.confirmPassword = null
+  }
+}
+
+const clearForm = () => {
+  formData.value = {
+    username: '',
+    password: '',
+    confirmPassword: '',
+    isAustralian: false,
+    reason: '',
+    gender: '',
+    suburb: 'Clayton'
+  }
+
+  errors.value = {
+    username: null,
+    password: null,
+    confirmPassword: null,
+    resident: null,
+    gender: null,
+    reason: null
+  }
+}
 
 const submitForm = () => {
   validateName(true)
@@ -28,97 +128,21 @@ const submitForm = () => {
       username,
       isAustralian,
       reason,
-      gender
+      gender,
+      suburb
     } = formData.value
 
     submittedCards.value.push({
       username,
       isAustralian,
       reason,
-      gender
+      gender,
+      suburb
     })
 
     clearForm()
   }
 }
-
-const clearForm = () => {
-  formData.value = {
-    username: '',
-    password: '',
-    confirmPassword: '',
-    isAustralian: false,
-    reason: '',
-    gender: ''
-  }
-
-  errors.value = {
-    username: null,
-    password: null,
-    confirmPassword: null,
-    resident: null,
-    gender: null,
-    reason: null
-  }
-}
-
-const errors = ref({
-  username: null,
-  password: null,
-  confirmPassword: null,
-  resident: null,
-  gender: null,
-  reason: null
-})
-
-const validateName = (blur) => {
-  if (formData.value.username.length < 3) {
-    if (blur) errors.value.username = 'Name must be at least 3 characters'
-  } else {
-    errors.value.username = null
-  }
-}
-
-const validatePassword = (blur) => {
-  const password = formData.value.password
-  const minLength = 8
-  const hasUppercase = /[A-Z]/.test(password)
-  const hasLowercase = /[a-z]/.test(password)
-  const hasNumber = /\d/.test(password)
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
-
-  if (password.length < minLength) {
-    if (blur) errors.value.password = `Password must be at least ${minLength} characters long.`
-  } else if (!hasUppercase) {
-    if (blur) errors.value.password = 'Password must contain at least one uppercase letter.'
-  } else if (!hasLowercase) {
-    if (blur) errors.value.password = 'Password must contain at least one lowercase letter.'
-  } else if (!hasNumber) {
-    if (blur) errors.value.password = 'Password must contain at least one number.'
-  } else if (!hasSpecialChar) {
-    if (blur) errors.value.password = 'Password must contain at least one special character.'
-  } else {
-    errors.value.password = null
-  }
-}
-
-const validateConfirmPassword = (blur) => {
-  const confirmPassword = formData.value.confirmPassword
-  const password = formData.value.password
-
-  if (!confirmPassword) {
-    if (blur) {
-      errors.value.confirmPassword = 'Please confirm your password.'
-    }
-  } else if (confirmPassword !== password) {
-    if (blur || errors.value.confirmPassword) {
-      errors.value.confirmPassword = 'Passwords do not match.'
-    }
-  } else {
-    errors.value.confirmPassword = null
-  }
-}
-
 </script>
 
 <template>
@@ -222,6 +246,15 @@ const validateConfirmPassword = (blur) => {
               v-model="formData.reason"
             ></textarea>
           </div>
+          <div class="mb-3">
+            <label for="suburb" class="form-label">Suburb</label>
+            <input
+              id="suburb"
+              v-model="formData.suburb"
+              type="text"
+              class="form-control"
+            />
+          </div>
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
@@ -238,6 +271,7 @@ const validateConfirmPassword = (blur) => {
       <Column field="isAustralian" header="Australian Resident"></Column>
       <Column field="gender" header="Gender"></Column>
       <Column field="reason" header="Reason"></Column>
+      <Column field="suburb" header="Suburb"></Column>
     </DataTable>
   </div>
 
@@ -257,6 +291,7 @@ const validateConfirmPassword = (blur) => {
           </li>
           <li class="list-group-item">Gender: {{ card.gender }}</li>
           <li class="list-group-item">Reason: {{ card.reason }}</li>
+          <li class="list-group-item">Suburb: {{ card.suburb }}</li>
         </ul>
       </div>
     </div>
