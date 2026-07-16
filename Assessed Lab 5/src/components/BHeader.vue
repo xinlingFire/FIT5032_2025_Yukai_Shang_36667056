@@ -5,10 +5,35 @@
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
         <li class="nav-item">
-          <a href="#" class="nav-link active" aria-current="page">Home (Week 4)</a>
+          <RouterLink
+            to="/"
+            class="nav-link"
+            exact-active-class="active"
+            aria-current-value="page"
+          >
+            Home (Week 5)
+          </RouterLink>
         </li>
-        <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Contact us</a></li>
+
+        <li class="nav-item">
+          <RouterLink
+            to="/about"
+            class="nav-link"
+            active-class="active"
+          >
+            About
+          </RouterLink>
+        </li>
+
+        <li class="nav-item">
+          <RouterLink
+            to="/contact"
+            class="nav-link"
+            active-class="active"
+          >
+            Contact us
+          </RouterLink>
+        </li>
       </ul>
     </header>
   </div>

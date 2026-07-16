@@ -1,7 +1,6 @@
 <script setup>
-import JSONLab from './components/JSONLab.vue'
+import { RouterView } from 'vue-router'
 import BHeader from './components/BHeader.vue'
-import LibraryRegistrationForm from './components/LibraryRegistrationForm.vue'
 </script>
 
 <template>
@@ -10,7 +9,7 @@ import LibraryRegistrationForm from './components/LibraryRegistrationForm.vue'
   </header>
 
   <main>
-    <LibraryRegistrationForm />
+    <RouterView />
     <!-- <JSONLab /> -->
   </main>
 </template>

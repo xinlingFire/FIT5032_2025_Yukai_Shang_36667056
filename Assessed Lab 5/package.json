@@ -14,16 +14,17 @@
     "@primevue/themes": "^4.0.4",
     "bootstrap": "^5.3.3",
     "primevue": "^4.0.4",
-    "vue": "^3.4.29"
+    "vue": "^3.4.29",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
-    "@vitejs/plugin-vue": "^5.0.5",
+    "@vitejs/plugin-vue": "^5.2.4",
     "@vue/eslint-config-prettier": "^9.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
     "prettier": "^3.2.5",
-    "vite": "^8.1.5",
+    "vite": "^6.4.3",
     "vite-plugin-vue-devtools": "^7.3.1"
   }
 }
