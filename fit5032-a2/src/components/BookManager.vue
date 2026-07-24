@@ -1,5 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
+import { clearBookEngagement } from '../services/engagementStore'
 import { createBook, removeBook, updateBook } from '../services/libraryStore'
 
 const props = defineProps({
@@ -145,9 +146,10 @@ const handleSubmit = () => {
 }
 
 const handleDelete = (book) => {
-  const shouldDelete = window.confirm(`Remove “${book.title}” from the catalogue?`)
+  const shouldDelete = window.confirm(`Remove "${book.title}" from the catalogue?`)
 
   if (shouldDelete) {
+    clearBookEngagement(book.id)
     emit('books-changed', removeBook(book.id))
   }
 }

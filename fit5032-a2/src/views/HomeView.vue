@@ -3,11 +3,13 @@ import { computed, ref } from 'vue'
 import BookCard from '../components/BookCard.vue'
 import CatalogFilters from '../components/CatalogFilters.vue'
 import SuggestionForm from '../components/SuggestionForm.vue'
+import { getRatingSummaries } from '../services/engagementStore'
 import { initialiseLibrary } from '../services/libraryStore'
 
 const books = ref(initialiseLibrary())
 const searchTerm = ref('')
 const selectedCategory = ref('')
+const ratingSummaries = ref(getRatingSummaries())
 
 const categories = computed(() =>
   [...new Set(books.value.map((book) => book.category))].sort()
@@ -57,7 +59,7 @@ const resetFilters = () => {
 
       <div v-if="filteredBooks.length" class="row g-4 mt-1">
         <div v-for="book in filteredBooks" :key="book.id" class="col-12 col-sm-6 col-lg-4 col-xl-3">
-          <BookCard :book="book" />
+          <BookCard :book="book" :rating-summary="ratingSummaries[book.id]" />
         </div>
       </div>
 
@@ -86,7 +88,7 @@ const resetFilters = () => {
         <p class="eyebrow">About Open Shelf</p>
         <h2>A simple catalogue, designed for exploration.</h2>
         <p>
-          This first release focuses on dynamic book discovery. Personal accounts, reviews and ratings will be added in later stages.
+          Open Shelf brings together dynamic book discovery, personal accounts and reader recommendations.
         </p>
       </div>
     </section>

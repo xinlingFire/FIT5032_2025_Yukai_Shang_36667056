@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import BookEngagementPanel from '../components/BookEngagementPanel.vue'
 import { getBookById } from '../services/libraryStore'
 
 const route = useRoute()
@@ -31,11 +32,10 @@ const book = computed(() => getBookById(route.params.id))
           </div>
         </dl>
         <p class="detail-description">{{ book.description }}</p>
-        <div class="future-feature-note">
-          Reviews and ratings will be available after the student account feature is introduced.
-        </div>
       </div>
     </section>
+
+    <BookEngagementPanel v-if="book" :key="book.id" :book="book" />
 
     <section v-else class="empty-state detail-empty">
       <h1>Book not found</h1>

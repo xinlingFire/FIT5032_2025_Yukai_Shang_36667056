@@ -3,6 +3,10 @@ defineProps({
   book: {
     type: Object,
     required: true
+  },
+  ratingSummary: {
+    type: Object,
+    default: () => ({ count: 0, average: null })
   }
 })
 </script>
@@ -17,6 +21,11 @@ defineProps({
       <p class="book-category">{{ book.category }}</p>
       <h2>{{ book.title }}</h2>
       <p class="book-author">{{ book.author }}</p>
+      <p class="book-rating">
+        <span aria-hidden="true">★</span>
+        {{ ratingSummary.average ?? 'New' }}
+        <span class="rating-count">{{ ratingSummary.count ? `(${ratingSummary.count})` : 'No ratings' }}</span>
+      </p>
       <p class="book-summary">{{ book.description }}</p>
       <RouterLink class="book-link" :to="{ name: 'book-detail', params: { id: book.id } }">
         View details <span aria-hidden="true">&rarr;</span>

@@ -27,11 +27,11 @@ npm run build
 - Authenticated account page with navigation guard
 - Student and administrator account roles with an administrator-only dashboard
 - Administrator-only book creation, editing and deletion with Local Storage persistence
+- Student favourites, reviews, individual 1-5 ratings and aggregate book rating scores
 - Not-found route
 
 ## Not included yet
 
-- Favourites, reviews, ratings or aggregate scores
 
 ## Administrator demo account
 

@@ -290,6 +290,23 @@ a {
   color: var(--muted);
 }
 
+.book-rating {
+  margin: 0.65rem 0 0;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.book-rating > span:first-child {
+  color: var(--gold);
+}
+
+.rating-count {
+  margin-left: 0.2rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
 .book-summary {
   display: -webkit-box;
   overflow: hidden;
@@ -469,6 +486,155 @@ a {
   line-height: 1.5;
 }
 
+.engagement-panel {
+  max-width: 950px;
+  margin: 3.5rem auto 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.rating-summary {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.rating-summary h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: 1;
+}
+
+.rating-summary h2 span {
+  color: var(--muted);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.rating-summary > p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.favourite-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--blue);
+  font-weight: 800;
+}
+
+.favourite-button span {
+  color: var(--gold);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.review-form {
+  max-width: 42rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.review-form fieldset {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+}
+
+.review-form legend {
+  margin-bottom: 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.score-picker {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.score-picker label {
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.score-picker input {
+  position: absolute;
+  opacity: 0;
+}
+
+.score-picker label.selected {
+  border-color: var(--gold);
+  background: #fff7df;
+  color: #805918;
+}
+
+.review-saved {
+  margin: 1rem 0 0;
+  color: #17664e;
+  font-weight: 700;
+}
+
+.engagement-sign-in {
+  margin-top: 1.5rem;
+  color: var(--muted);
+}
+
+.engagement-sign-in a {
+  color: var(--blue);
+  font-weight: 800;
+}
+
+.review-list {
+  max-width: 42rem;
+  border-top: 1px solid var(--line);
+}
+
+.review-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-item div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.review-item div span {
+  color: #805918;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.review-item p {
+  margin: 0.65rem 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.review-item small {
+  color: var(--muted);
+}
+
 .detail-empty,
 .not-found-page {
   max-width: 700px;
@@ -637,6 +803,10 @@ a {
   background: #eef3f2;
 }
 
+.account-content {
+  width: min(100%, 34rem);
+}
+
 .auth-card,
 .account-card {
   width: min(100%, 34rem);
@@ -699,6 +869,51 @@ a {
   margin: 0.35rem 0 0;
   overflow-wrap: anywhere;
   font-weight: 700;
+}
+
+.account-favourites {
+  margin-top: 2.5rem;
+}
+
+.account-favourites h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem;
+}
+
+.favourite-list {
+  margin: 1rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.favourite-list li {
+  border-bottom: 1px solid var(--line);
+}
+
+.favourite-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.favourite-list a:hover {
+  color: var(--blue);
+}
+
+.favourite-list small,
+.empty-favourites {
+  color: var(--muted);
+}
+
+.empty-favourites {
+  margin: 1rem 0 0;
+  line-height: 1.6;
 }
 
 @media (max-width: 767.98px) {
@@ -769,6 +984,11 @@ a {
   .detail-cover {
     width: min(100%, 19rem);
     min-height: 20rem;
+  }
+
+  .rating-summary {
+    align-items: start;
+    flex-direction: column;
   }
 }
 
