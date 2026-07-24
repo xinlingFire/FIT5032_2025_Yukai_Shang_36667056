@@ -12,9 +12,9 @@ This report presents the design direction for Open Shelf Health Connect. Any ext
 
 Open Shelf Health Connect is a fictional health charity web application for newly arrived migrant communities in Australia. Its purpose is to make reliable starting points for health information easier to discover, save and revisit. The service focuses on plain-language resource navigation rather than medical diagnosis, clinical advice, appointment booking or emergency response.
 
-Newly arrived migrants can find it difficult to understand local health services, decide what questions to ask, or locate language support. The application responds with a mobile-friendly health resource hub covering health care access, interpreter support, mental wellbeing, child and family health, preventive health, everyday wellbeing, older people and urgent help. Visitors can search by resource name or provider, filter by health topic and read a short summary before deciding whether the resource is useful.
+Newly arrived migrants can find it difficult to understand local health services, decide what questions to ask, or locate language support. The application responds with a mobile-friendly health library containing health books, practical guides and community workshops. It covers health care access, interpreter support, mental wellbeing, child and family health, preventive health, everyday wellbeing, older people and urgent help. Visitors can search by resource name or provider, filter by health topic and resource type, and read a short summary before deciding whether the resource is useful.
 
-Registered community members can save resources and submit one usefulness rating and feedback entry per resource. Service coordinators can add, edit and remove resources through an administrator-only area. This gives the charity a practical way to keep the resource collection current while allowing community voices to shape priorities.
+Registered community members can save any book, guide or workshop and submit one usefulness rating and feedback entry per resource. Workshops display a date, time and venue but do not collect registrations. Service coordinators can add, edit and remove all three resource types through an administrator-only area. This gives the charity a practical way to keep the resource collection current while allowing community voices to shape priorities.
 
 The application prominently states that its content is general information only. It does not replace advice from a doctor or other qualified health professional. For urgent help in Australia, users are directed to call 000.
 
@@ -45,10 +45,11 @@ Sarah is 42 and helps relatives who have recently migrated. She needs understand
 ## 4. Sitemap
 
 ```text
-Home / Health resources
-|- Search and health-topic filter
+Home / Health books, guides and workshops
+|- Search, resource-type and health-topic filters
 |- Resource detail
 |  |- General information safety notice
+|  |- Workshop schedule and venue (workshops only)
 |  |- Save resource
 |  |- Usefulness rating and community feedback
 |- Suggest a resource
@@ -76,9 +77,9 @@ Home / Health resources
 | Important: general information only. Emergency: call 000 |
 +----------------------------------------------------------+
 | Search resources or providers [____________]             |
-| Health topic [All topics v] [Clear]                      |
+| Health topic [All topics v] Type [All types v] [Clear]   |
 +----------------------------------------------------------+
-| Topic | Resource title | Provider | usefulness score      |
+| Icon | Type | Topic | Resource title | usefulness score    |
 | Short plain-language summary              [View resource]|
 +----------------------------------------------------------+
 ```
@@ -88,8 +89,8 @@ Home / Health resources
 ```text
 +----------------------------------------------------------+
 | Back to health resources                                 |
-| Health topic | Resource name | Provided by organisation  |
-| Last updated | Plain-language summary                    |
+| Health topic | Resource type | Resource name             |
+| Author/provider/host | schedule or year | summary          |
 +----------------------------------------------------------+
 | Important: general information only. Emergency: call 000 |
 +----------------------------------------------------------+

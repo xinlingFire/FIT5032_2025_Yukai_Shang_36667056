@@ -1,6 +1,6 @@
 # Open Shelf Health Connect
 
-Open Shelf Health Connect is a responsive Vue 3 health-resource hub for newly arrived migrant communities in Australia. It helps community members browse plain-language starting points, save useful resources and share feedback. It provides general information only and is not a medical advice, diagnosis or emergency-response service.
+Open Shelf Health Connect is a responsive Vue 3 health-resource hub for newly arrived migrant communities in Australia. It brings together health books, practical guides and community workshops that members can browse, save and rate. It provides general information only and is not a medical advice, diagnosis or emergency-response service.
 
 ## Run locally
 
@@ -18,13 +18,16 @@ npm run build
 ## Included functionality
 
 - Responsive health resource hub with a community-health hero image
-- Keyword search by resource name or provider, plus health-topic filtering
-- Browser Local Storage initialisation from eight health-resource records
+- Mixed catalogue of health books, practical guides and community workshops
+- Lucide book, document and presentation icons that distinguish each resource type
+- Keyword search by resource name or provider, plus resource-type and health-topic filtering
+- Workshop cards and detail views with date, time and venue information; no booking flow
+- Browser Local Storage initialisation and upgrade from earlier seed data
 - General health-information and emergency `000` safety notices on the home and resource-detail pages
 - Resource suggestion form with name, email and text-length validation
 - Registration, login, logout and persistent local browser session
 - Community member and service coordinator roles with an administrator-only management area
-- Service coordinator resource creation, editing and deletion with Local Storage persistence
+- Service coordinator creation, editing and deletion of books, guides and workshops with Local Storage persistence
 - Community member saved resources, individual 1-5 usefulness ratings and aggregate feedback scores
 - Not-found and access-denied pages
 
@@ -39,9 +42,9 @@ The authentication and role checks are front-end demonstrations backed by browse
 - Email: `admin@openshelf.local`
 - Password: `AdminPass2026!`
 
-## Reset local data
+## Local data upgrade
 
-To load the health-resource seed data after using an older catalogue version, remove the `open-shelf-library-books` entry from the browser's Local Storage and reload the application. The legacy key is intentionally retained to avoid changing the existing data-flow implementation.
+When the app first loads this version, the older catalogue is upgraded to the mixed resource directory. The legacy Local Storage key is intentionally retained to avoid changing the existing data-flow implementation.
 
 ## Visual acknowledgement
 

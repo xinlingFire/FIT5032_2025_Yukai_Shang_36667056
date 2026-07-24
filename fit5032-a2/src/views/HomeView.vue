@@ -5,13 +5,16 @@ import CatalogFilters from '../components/CatalogFilters.vue'
 import HealthSafetyNotice from '../components/HealthSafetyNotice.vue'
 import SuggestionForm from '../components/SuggestionForm.vue'
 import communityHealthWorkshop from '../assets/community-health-workshop.jpg'
+import { RESOURCE_TYPES, normaliseResourceType } from '../data/resourceTypes'
 import { getRatingSummaries } from '../services/engagementStore'
 import { initialiseLibrary } from '../services/libraryStore'
 
 const books = ref(initialiseLibrary())
 const searchTerm = ref('')
 const selectedCategory = ref('')
+const selectedType = ref('')
 const ratingSummaries = ref(getRatingSummaries())
+const resourceTypes = RESOURCE_TYPES
 
 const categories = computed(() =>
   [...new Set(books.value.map((book) => book.category))].sort()
@@ -27,14 +30,17 @@ const filteredBooks = computed(() => {
       book.author.toLocaleLowerCase().includes(normalisedSearch)
     const matchesCategory =
       !selectedCategory.value || book.category === selectedCategory.value
+    const matchesType =
+      !selectedType.value || normaliseResourceType(book.type) === selectedType.value
 
-    return matchesSearch && matchesCategory
+    return matchesSearch && matchesCategory && matchesType
   })
 })
 
 const resetFilters = () => {
   searchTerm.value = ''
   selectedCategory.value = ''
+  selectedType.value = ''
 }
 </script>
 
@@ -50,8 +56,8 @@ const resetFilters = () => {
         <p class="eyebrow">For people new to Australia</p>
         <h1>Find health information you can use.</h1>
         <p class="hero-copy">
-          Open Shelf Health Connect brings together clear starting points for understanding health services,
-          wellbeing and support in your new community.
+          Open Shelf Health Connect brings together health books, practical guides and community workshops for
+          understanding health services, wellbeing and support in your new community.
         </p>
       </div>
     </section>
@@ -62,7 +68,9 @@ const resetFilters = () => {
       <CatalogFilters
         v-model:search-term="searchTerm"
         v-model:selected-category="selectedCategory"
+        v-model:selected-type="selectedType"
         :categories="categories"
+        :resource-types="resourceTypes"
         :result-count="filteredBooks.length"
         @reset="resetFilters"
       />
@@ -75,7 +83,7 @@ const resetFilters = () => {
 
       <div v-else class="empty-state">
         <h2>No matching resources</h2>
-        <p>Try a different resource name, provider or health topic.</p>
+        <p>Try a different resource name, provider, type or health topic.</p>
         <button class="btn btn-primary" type="button" @click="resetFilters">Show all resources</button>
       </div>
     </section>

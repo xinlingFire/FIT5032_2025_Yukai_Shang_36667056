@@ -1,5 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
+import { RESOURCE_TYPES, formatWorkshopSchedule, getResourceType, normaliseResourceType } from '../data/resourceTypes'
 import { clearBookEngagement } from '../services/engagementStore'
 import { createBook, removeBook, updateBook } from '../services/libraryStore'
 
@@ -13,27 +14,39 @@ const props = defineProps({
 const emit = defineEmits(['books-changed'])
 
 const createEmptyForm = () => ({
+  type: 'guide',
   title: '',
   author: '',
   category: '',
   year: new Date().getFullYear(),
+  eventDate: '',
+  eventTime: '',
+  venue: '',
   accent: '#176a7c',
   description: ''
 })
 
 const form = reactive(createEmptyForm())
 const errors = reactive({
+  type: '',
   title: '',
   author: '',
   category: '',
   year: '',
+  eventDate: '',
+  eventTime: '',
+  venue: '',
   description: ''
 })
 const touched = reactive({
+  type: false,
   title: false,
   author: false,
   category: false,
   year: false,
+  eventDate: false,
+  eventTime: false,
+  venue: false,
   description: false
 })
 const editorIsOpen = ref(false)
@@ -41,13 +54,29 @@ const editingId = ref(null)
 const hasSubmitted = ref(false)
 
 const formTitle = computed(() => (editingId.value ? 'Edit resource' : 'Add a resource'))
+const selectedType = computed(() => getResourceType(normaliseResourceType(form.type)))
+const isWorkshop = computed(() => selectedType.value.value === 'workshop')
+const validationFields = computed(() => {
+  const baseFields = ['type', 'title', 'author', 'category', 'description']
+
+  return isWorkshop.value
+    ? [...baseFields, 'eventDate', 'eventTime', 'venue']
+    : [...baseFields, 'year']
+})
 
 const validators = {
+  type(value) {
+    return RESOURCE_TYPES.some((resourceType) => resourceType.value === value)
+      ? ''
+      : 'Select a resource type.'
+  },
   title(value) {
     return value.trim().length >= 2 ? '' : 'Enter a resource name with at least 2 characters.'
   },
   author(value) {
-    return value.trim().length >= 2 ? '' : 'Enter a provider name with at least 2 characters.'
+    return value.trim().length >= 2
+      ? ''
+      : `Enter a ${selectedType.value.contributorLabel.toLocaleLowerCase()} name with at least 2 characters.`
   },
   category(value) {
     return value.trim().length >= 2 ? '' : 'Enter a health topic with at least 2 characters.'
@@ -55,9 +84,20 @@ const validators = {
   year(value) {
     const year = Number(value)
     const currentYear = new Date().getFullYear()
-    return Number.isInteger(year) && year >= 1450 && year <= currentYear
+    return Number.isInteger(year) && year >= 1900 && year <= currentYear
       ? ''
       : `Enter a year from 1900 to ${currentYear}.`
+  },
+  eventDate(value) {
+    return Number.isNaN(new Date(`${value}T00:00:00`).getTime())
+      ? 'Select the workshop date.'
+      : ''
+  },
+  eventTime(value) {
+    return value.trim().length >= 2 ? '' : 'Enter the workshop time.'
+  },
+  venue(value) {
+    return value.trim().length >= 2 ? '' : 'Enter the workshop venue.'
   },
   description(value) {
     const length = value.trim().length
@@ -85,10 +125,14 @@ const openCreateEditor = () => {
 
 const openEditEditor = (book) => {
   Object.assign(form, {
+    type: normaliseResourceType(book.type),
     title: book.title,
     author: book.author,
     category: book.category,
     year: book.year,
+    eventDate: book.eventDate ?? '',
+    eventTime: book.eventTime ?? '',
+    venue: book.venue ?? '',
     accent: book.accent,
     description: book.description
   })
@@ -119,9 +163,20 @@ const handleInput = (field) => {
   }
 }
 
+const handleTypeChange = () => {
+  handleInput('type')
+
+  if (!isWorkshop.value) {
+    ;['eventDate', 'eventTime', 'venue'].forEach((field) => {
+      errors[field] = ''
+      touched[field] = false
+    })
+  }
+}
+
 const handleSubmit = () => {
   hasSubmitted.value = true
-  const isValid = Object.keys(validators)
+  const isValid = validationFields.value
     .map((field) => validateField(field))
     .every(Boolean)
 
@@ -129,11 +184,16 @@ const handleSubmit = () => {
     return
   }
 
+  const type = normaliseResourceType(form.type)
   const details = {
+    type,
     title: form.title.trim(),
     author: form.author.trim(),
     category: form.category.trim(),
-    year: Number(form.year),
+    year: type === 'workshop' ? Number(form.eventDate.slice(0, 4)) : Number(form.year),
+    eventDate: type === 'workshop' ? form.eventDate : undefined,
+    eventTime: type === 'workshop' ? form.eventTime.trim() : undefined,
+    venue: type === 'workshop' ? form.venue.trim() : undefined,
     accent: form.accent,
     description: form.description.trim()
   }
@@ -160,7 +220,7 @@ const handleDelete = (book) => {
     <div class="admin-section-heading">
       <div>
         <p class="eyebrow">Health resource hub</p>
-        <h2 id="resources-heading">Manage resources</h2>
+        <h2 id="resources-heading">Manage books, guides and workshops</h2>
       </div>
       <button class="btn btn-primary" type="button" @click="openCreateEditor">Add resource</button>
     </div>
@@ -179,7 +239,24 @@ const handleDelete = (book) => {
       </div>
 
       <div class="row g-3">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-4">
+          <label class="form-label" for="resource-type">Resource type</label>
+          <select
+            id="resource-type"
+            v-model="form.type"
+            class="form-select"
+            :class="{ 'is-invalid': errors.type }"
+            aria-describedby="resource-type-error"
+            @change="handleTypeChange"
+          >
+            <option v-for="resourceType in RESOURCE_TYPES" :key="resourceType.value" :value="resourceType.value">
+              {{ resourceType.label }}
+            </option>
+          </select>
+          <div id="resource-type-error" class="invalid-feedback">{{ errors.type }}</div>
+        </div>
+
+        <div class="col-12 col-md-8">
           <label class="form-label" for="book-title">Resource name</label>
           <input
             id="book-title"
@@ -195,7 +272,7 @@ const handleDelete = (book) => {
         </div>
 
         <div class="col-12 col-md-6">
-          <label class="form-label" for="book-author">Provider</label>
+          <label class="form-label" for="book-author">{{ selectedType.contributorLabel }}</label>
           <input
             id="book-author"
             v-model="form.author"
@@ -209,7 +286,7 @@ const handleDelete = (book) => {
           <div id="book-author-error" class="invalid-feedback">{{ errors.author }}</div>
         </div>
 
-        <div class="col-12 col-md-5">
+        <div class="col-12 col-md-6">
           <label class="form-label" for="book-category">Health topic</label>
           <input
             id="book-category"
@@ -224,8 +301,56 @@ const handleDelete = (book) => {
           <div id="book-category-error" class="invalid-feedback">{{ errors.category }}</div>
         </div>
 
-        <div class="col-8 col-md-4">
-          <label class="form-label" for="book-year">Last updated</label>
+        <template v-if="isWorkshop">
+          <div class="col-12 col-md-4">
+            <label class="form-label" for="workshop-date">Workshop date</label>
+            <input
+              id="workshop-date"
+              v-model="form.eventDate"
+              class="form-control"
+              :class="{ 'is-invalid': errors.eventDate }"
+              type="date"
+              aria-describedby="workshop-date-error"
+              @blur="handleBlur('eventDate')"
+              @input="handleInput('eventDate')"
+            />
+            <div id="workshop-date-error" class="invalid-feedback">{{ errors.eventDate }}</div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label class="form-label" for="workshop-time">Workshop time</label>
+            <input
+              id="workshop-time"
+              v-model="form.eventTime"
+              class="form-control"
+              :class="{ 'is-invalid': errors.eventTime }"
+              type="text"
+              placeholder="6:30 pm - 7:30 pm"
+              aria-describedby="workshop-time-error"
+              @blur="handleBlur('eventTime')"
+              @input="handleInput('eventTime')"
+            />
+            <div id="workshop-time-error" class="invalid-feedback">{{ errors.eventTime }}</div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label class="form-label" for="workshop-venue">Workshop venue</label>
+            <input
+              id="workshop-venue"
+              v-model="form.venue"
+              class="form-control"
+              :class="{ 'is-invalid': errors.venue }"
+              type="text"
+              aria-describedby="workshop-venue-error"
+              @blur="handleBlur('venue')"
+              @input="handleInput('venue')"
+            />
+            <div id="workshop-venue-error" class="invalid-feedback">{{ errors.venue }}</div>
+          </div>
+        </template>
+
+        <div v-else class="col-8 col-md-4">
+          <label class="form-label" for="book-year">{{ selectedType.yearLabel }}</label>
           <input
             id="book-year"
             v-model="form.year"
@@ -241,7 +366,7 @@ const handleDelete = (book) => {
           <div id="book-year-error" class="invalid-feedback">{{ errors.year }}</div>
         </div>
 
-        <div class="col-4 col-md-3">
+        <div :class="isWorkshop ? 'col-12 col-md-4' : 'col-4 col-md-2'">
           <label class="form-label" for="book-colour">Resource colour</label>
           <input
             id="book-colour"
@@ -260,7 +385,7 @@ const handleDelete = (book) => {
             class="form-control"
             :class="{ 'is-invalid': errors.description }"
             rows="4"
-            maxlength="501"
+            maxlength="500"
             aria-describedby="book-description-error"
             @blur="handleBlur('description')"
             @input="handleInput('description')"
@@ -279,18 +404,20 @@ const handleDelete = (book) => {
         <thead>
           <tr>
             <th scope="col">Resource</th>
-            <th scope="col">Provider</th>
-            <th scope="col">Health topic</th>
-            <th scope="col">Updated</th>
+            <th scope="col">Type</th>
+            <th scope="col">Author, provider or host</th>
+            <th scope="col">Schedule or year</th>
             <th scope="col"><span class="visually-hidden">Actions</span></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="book in props.books" :key="book.id">
             <td>{{ book.title }}</td>
+            <td>{{ getResourceType(normaliseResourceType(book.type)).label }}</td>
             <td>{{ book.author }}</td>
-            <td>{{ book.category }}</td>
-            <td>{{ book.year }}</td>
+            <td>
+              {{ normaliseResourceType(book.type) === 'workshop' ? formatWorkshopSchedule(book, false) : book.year }}
+            </td>
             <td class="book-actions">
               <button
                 class="btn btn-sm btn-outline-secondary"

@@ -278,8 +278,7 @@ a {
   box-shadow: 0 12px 22px rgba(23, 35, 52, 0.1);
 }
 
-.book-cover,
-.detail-cover {
+.resource-cover {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -288,21 +287,26 @@ a {
   color: rgba(255, 255, 255, 0.96);
 }
 
-.book-cover {
+.book-card .resource-cover {
   min-height: 12.5rem;
   padding: 1rem;
 }
 
-.book-cover span,
-.detail-cover span {
-  align-self: center;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 4.4rem;
-  line-height: 1;
+.resource-cover-type {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.book-cover small,
-.detail-cover small {
+.resource-cover-icon {
+  align-self: center;
+  margin: auto;
+}
+
+.resource-cover small {
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -310,9 +314,18 @@ a {
 
 .book-card-body {
   display: flex;
-  min-height: 17.5rem;
+  min-height: 19rem;
   flex-direction: column;
   padding: 1.25rem;
+}
+
+.resource-type {
+  margin: 0 0 0.35rem;
+  color: #805918;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
 .book-category {
@@ -335,6 +348,14 @@ a {
 .detail-author {
   margin: 0.45rem 0 0;
   color: var(--muted);
+}
+
+.workshop-summary {
+  margin: 0.7rem 0 0;
+  color: var(--blue-dark);
+  font-size: 0.83rem;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .book-rating {
@@ -469,15 +490,15 @@ a {
   margin: 2rem auto 0;
 }
 
-.detail-cover {
+.resource-cover-detail {
   min-height: 25rem;
   padding: 1.5rem;
   border-radius: 6px;
   box-shadow: 11px 13px 0 rgba(23, 35, 52, 0.12);
 }
 
-.detail-cover span {
-  font-size: 8rem;
+.resource-cover-detail .resource-cover-icon {
+  margin: auto;
 }
 
 .detail-content {
@@ -1037,7 +1058,7 @@ a {
     flex-direction: column;
   }
 
-  .detail-cover {
+  .resource-cover-detail {
     width: min(100%, 19rem);
     min-height: 20rem;
   }

@@ -3,10 +3,34 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import BookEngagementPanel from '../components/BookEngagementPanel.vue'
 import HealthSafetyNotice from '../components/HealthSafetyNotice.vue'
+import ResourceCover from '../components/ResourceCover.vue'
+import { formatWorkshopSchedule, getResourceType, normaliseResourceType } from '../data/resourceTypes'
 import { getBookById } from '../services/libraryStore'
 
 const route = useRoute()
 const book = computed(() => getBookById(route.params.id))
+const resourceType = computed(() => getResourceType(normaliseResourceType(book.value?.type)))
+const contributorLine = computed(() =>
+  book.value ? `${resourceType.value.contributorLabel}: ${book.value.author}` : ''
+)
+const metadata = computed(() => {
+  if (!book.value) {
+    return []
+  }
+
+  if (resourceType.value.value === 'workshop') {
+    return [
+      { label: 'Date and time', value: formatWorkshopSchedule(book.value) },
+      { label: 'Location', value: book.value.venue || 'Location to be confirmed' },
+      { label: 'Health topic', value: book.value.category }
+    ]
+  }
+
+  return [
+    { label: resourceType.value.yearLabel, value: book.value.year },
+    { label: 'Health topic', value: book.value.category }
+  ]
+})
 </script>
 
 <template>
@@ -14,22 +38,16 @@ const book = computed(() => getBookById(route.params.id))
     <RouterLink class="back-link" to="/">&larr; Back to health resources</RouterLink>
 
     <section v-if="book" class="detail-layout">
-      <div class="detail-cover" :style="{ '--cover-colour': book.accent }" aria-hidden="true">
-        <span>{{ book.title.slice(0, 1) }}</span>
-        <small>{{ book.year }}</small>
-      </div>
+      <ResourceCover :resource="book" detail />
       <div class="detail-content">
+        <p class="resource-type">{{ resourceType.label }}</p>
         <p class="book-category">{{ book.category }}</p>
         <h1>{{ book.title }}</h1>
-        <p class="detail-author">Provided by {{ book.author }}</p>
+        <p class="detail-author">{{ contributorLine }}</p>
         <dl class="book-metadata">
-          <div>
-            <dt>Last updated</dt>
-            <dd>{{ book.year }}</dd>
-          </div>
-          <div>
-            <dt>Health topic</dt>
-            <dd>{{ book.category }}</dd>
+          <div v-for="item in metadata" :key="item.label">
+            <dt>{{ item.label }}</dt>
+            <dd>{{ item.value }}</dd>
           </div>
         </dl>
         <p class="detail-description">{{ book.description }}</p>

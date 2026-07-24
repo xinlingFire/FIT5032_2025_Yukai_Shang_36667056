@@ -1,5 +1,9 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+import { formatWorkshopSchedule, getResourceType, normaliseResourceType } from '../data/resourceTypes'
+import ResourceCover from './ResourceCover.vue'
+
+const props = defineProps({
   book: {
     type: Object,
     required: true
@@ -9,18 +13,23 @@ defineProps({
     default: () => ({ count: 0, average: null })
   }
 })
+
+const resourceType = computed(() => getResourceType(normaliseResourceType(props.book.type)))
+const contributorLine = computed(() => `${resourceType.value.contributorLabel}: ${props.book.author}`)
+const workshopLocation = computed(() => props.book.venue || 'Location to be confirmed')
 </script>
 
 <template>
   <article class="book-card h-100">
-    <div class="book-cover" :style="{ '--cover-colour': book.accent }" aria-hidden="true">
-      <span>{{ book.title.slice(0, 1) }}</span>
-      <small>{{ book.year }}</small>
-    </div>
+    <ResourceCover :resource="book" />
     <div class="book-card-body">
+      <p class="resource-type">{{ resourceType.label }}</p>
       <p class="book-category">{{ book.category }}</p>
       <h2>{{ book.title }}</h2>
-      <p class="book-author">Provided by {{ book.author }}</p>
+      <p class="book-author">{{ contributorLine }}</p>
+      <p v-if="resourceType.value === 'workshop'" class="workshop-summary">
+        {{ formatWorkshopSchedule(book, true) }}<br />{{ workshopLocation }}
+      </p>
       <p class="book-rating">
         <span aria-hidden="true">★</span>
         {{ ratingSummary.average ?? 'New' }}

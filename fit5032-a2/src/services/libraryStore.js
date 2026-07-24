@@ -1,6 +1,9 @@
 import { seedBooks } from '../data/seedBooks'
+import { normaliseResourceType } from '../data/resourceTypes'
 
 const BOOKS_STORAGE_KEY = 'open-shelf-library-books'
+const RESOURCE_SCHEMA_VERSION_KEY = 'open-shelf-health-resource-schema-version'
+const RESOURCE_SCHEMA_VERSION = '2'
 const LEGACY_BOOK_IDS = new Set([
   'the-left-hand-of-darkness',
   'pachinko',
@@ -11,12 +14,42 @@ const LEGACY_BOOK_IDS = new Set([
   'thinking-fast-and-slow',
   'the-midnight-library'
 ])
+const SEED_RESOURCE_IDS = new Set(seedBooks.map((book) => book.id))
 
 const cloneBooks = (books) => books.map((book) => ({ ...book }))
 
 const saveBooks = (books) => {
   window.localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(books))
   return cloneBooks(books)
+}
+
+const saveSchemaVersion = () => {
+  window.localStorage.setItem(RESOURCE_SCHEMA_VERSION_KEY, RESOURCE_SCHEMA_VERSION)
+}
+
+const createSeedResources = () => {
+  const resources = cloneBooks(seedBooks)
+  saveSchemaVersion()
+  return saveBooks(resources)
+}
+
+const normaliseStoredResource = (resource) => ({
+  ...resource,
+  type: normaliseResourceType(resource.type),
+  eventDate: resource.type === 'workshop' ? resource.eventDate ?? '' : undefined,
+  eventTime: resource.type === 'workshop' ? resource.eventTime ?? '' : undefined,
+  venue: resource.type === 'workshop' ? resource.venue ?? '' : undefined
+})
+
+const upgradeHealthResources = (books) => {
+  const customResources = books
+    // Refresh supplied resources but retain coordinator-created resources.
+    .filter((book) => !SEED_RESOURCE_IDS.has(book.id) && !LEGACY_BOOK_IDS.has(book.id))
+    .map(normaliseStoredResource)
+  const upgradedResources = [...cloneBooks(seedBooks), ...customResources]
+
+  saveSchemaVersion()
+  return saveBooks(upgradedResources)
 }
 
 const createBookId = (title, books) => {
@@ -45,21 +78,27 @@ export const initialiseLibrary = () => {
   const storedBooks = window.localStorage.getItem(BOOKS_STORAGE_KEY)
 
   if (!storedBooks) {
-    const books = cloneBooks(seedBooks)
-    window.localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(books))
-    return books
+    return createSeedResources()
   }
 
   try {
     const books = JSON.parse(storedBooks)
 
     if (!Array.isArray(books)) {
-      return cloneBooks(seedBooks)
+      return createSeedResources()
     }
 
-    return isLegacyBookCatalogue(books) ? saveBooks(cloneBooks(seedBooks)) : books
+    if (isLegacyBookCatalogue(books)) {
+      return upgradeHealthResources(books)
+    }
+
+    if (window.localStorage.getItem(RESOURCE_SCHEMA_VERSION_KEY) !== RESOURCE_SCHEMA_VERSION) {
+      return upgradeHealthResources(books)
+    }
+
+    return books
   } catch {
-    return cloneBooks(seedBooks)
+    return createSeedResources()
   }
 }
 
