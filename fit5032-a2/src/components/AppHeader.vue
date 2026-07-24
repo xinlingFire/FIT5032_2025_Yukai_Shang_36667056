@@ -31,6 +31,7 @@ const closeMenu = () => {
 
       <nav :class="['site-nav', { 'is-open': menuIsOpen }]" aria-label="Main navigation">
         <RouterLink to="/" @click="closeMenu">Catalogue</RouterLink>
+        <a href="#suggest" @click="closeMenu">Suggest a book</a>
         <a href="#about" @click="closeMenu">About</a>
       </nav>
     </div>

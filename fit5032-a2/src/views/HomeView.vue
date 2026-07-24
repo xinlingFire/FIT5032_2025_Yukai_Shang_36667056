@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import BookCard from '../components/BookCard.vue'
 import CatalogFilters from '../components/CatalogFilters.vue'
+import SuggestionForm from '../components/SuggestionForm.vue'
 import { initialiseLibrary } from '../services/libraryStore'
 
 const books = ref(initialiseLibrary())
@@ -64,6 +65,19 @@ const resetFilters = () => {
         <h2>No matching books</h2>
         <p>Try a different title, author or category.</p>
         <button class="btn btn-primary" type="button" @click="resetFilters">Show all books</button>
+      </div>
+    </section>
+
+    <section id="suggest" class="suggestion-band">
+      <div class="container suggestion-layout">
+        <div class="suggestion-intro">
+          <p class="eyebrow">Build the collection</p>
+          <h2>Recommend a book.</h2>
+          <p>
+            Tell Open Shelf about a title that belongs in the catalogue.
+          </p>
+        </div>
+        <SuggestionForm />
       </div>
     </section>
 
