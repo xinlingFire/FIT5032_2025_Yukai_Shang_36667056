@@ -25,12 +25,17 @@ npm run build
 - Valid book suggestions saved in browser Local Storage
 - Account registration, login, logout and persistent browser session
 - Authenticated account page with navigation guard
+- Student and administrator account roles with an administrator-only dashboard
+- Administrator-only book creation, editing and deletion with Local Storage persistence
 - Not-found route
 
 ## Not included yet
 
-- Student and administrator roles or authorisation levels
-- Administrator book management forms
 - Favourites, reviews, ratings or aggregate scores
+
+## Administrator demo account
+
+- Email: `admin@openshelf.local`
+- Password: `AdminPass2026!`
 
 To reset the sample catalogue, remove the `open-shelf-library-books` entry from the browser's Local Storage and reload the application.

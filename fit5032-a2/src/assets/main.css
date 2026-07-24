@@ -491,6 +491,143 @@ a {
   line-height: 1.7;
 }
 
+.admin-page {
+  min-height: calc(100vh - 76px);
+  padding-top: 4rem;
+  padding-bottom: 5rem;
+}
+
+.admin-page h1,
+.admin-table-section h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.admin-page h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+}
+
+.admin-intro {
+  max-width: 44rem;
+  margin: 1rem 0 2.5rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.admin-stat {
+  min-height: 9.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--blue);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.admin-stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.admin-stat strong {
+  display: block;
+  margin-top: 1rem;
+  color: var(--blue-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.admin-table-section {
+  border-top: 1px solid var(--line);
+}
+
+.admin-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
+
+.admin-section-heading .eyebrow {
+  margin-bottom: 0.45rem;
+}
+
+.admin-section-heading > span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.admin-table-section th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.admin-table-section td {
+  color: var(--ink);
+}
+
+.book-editor {
+  margin: 0 0 1.5rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f4f8f7;
+}
+
+.editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.editor-heading h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.65rem;
+}
+
+.book-actions {
+  display: flex;
+  justify-content: end;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.role-label {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.role-admin {
+  background: #e0f0ed;
+  color: #175c50;
+}
+
+.role-student {
+  background: #e9eff8;
+  color: #315c95;
+}
+
 .auth-page,
 .account-page {
   display: grid;
@@ -613,6 +750,20 @@ a {
 
   .suggestion-layout {
     grid-template-columns: 1fr;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-section-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .editor-heading {
+    align-items: start;
+    flex-direction: column;
   }
 
   .detail-cover {

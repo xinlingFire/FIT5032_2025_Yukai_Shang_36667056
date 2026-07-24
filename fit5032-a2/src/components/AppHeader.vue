@@ -44,6 +44,13 @@ const handleLogout = () => {
         <RouterLink :to="{ name: 'home', hash: '#about' }" @click="closeMenu">About</RouterLink>
         <template v-if="isAuthenticated">
           <RouterLink to="/account" @click="closeMenu">My account</RouterLink>
+          <RouterLink
+            v-if="currentUser?.role === 'admin'"
+            to="/admin"
+            @click="closeMenu"
+          >
+            Manage library
+          </RouterLink>
           <span class="nav-user">{{ currentUser?.name }}</span>
           <button class="nav-logout" type="button" @click="handleLogout">Log out</button>
         </template>

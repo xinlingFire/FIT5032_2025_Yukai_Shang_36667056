@@ -26,6 +26,10 @@ const handleLogout = () => {
           <dt>Account created</dt>
           <dd>{{ new Date(currentUser?.createdAt).toLocaleDateString() }}</dd>
         </div>
+        <div>
+          <dt>Access level</dt>
+          <dd class="text-capitalize">{{ currentUser?.role }}</dd>
+        </div>
       </dl>
 
       <div class="d-flex flex-wrap gap-3">
