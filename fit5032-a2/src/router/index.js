@@ -4,8 +4,22 @@ import { currentUser, isAuthenticated } from '../services/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior() {
-    return { top: 0 }
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      }
+    }
+
+    return {
+      top: 0,
+      behavior: 'smooth'
+    }
   },
   routes: [
     {
