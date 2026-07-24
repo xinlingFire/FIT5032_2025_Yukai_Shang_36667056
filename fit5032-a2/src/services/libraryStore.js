@@ -1,6 +1,16 @@
 import { seedBooks } from '../data/seedBooks'
 
 const BOOKS_STORAGE_KEY = 'open-shelf-library-books'
+const LEGACY_BOOK_IDS = new Set([
+  'the-left-hand-of-darkness',
+  'pachinko',
+  'braiding-sweetgrass',
+  'klara-and-the-sun',
+  'atomic-habits',
+  'the-song-of-achilles',
+  'thinking-fast-and-slow',
+  'the-midnight-library'
+])
 
 const cloneBooks = (books) => books.map((book) => ({ ...book }))
 
@@ -28,6 +38,9 @@ const createBookId = (title, books) => {
   return id
 }
 
+const isLegacyBookCatalogue = (books) =>
+  books.some((book) => LEGACY_BOOK_IDS.has(book.id))
+
 export const initialiseLibrary = () => {
   const storedBooks = window.localStorage.getItem(BOOKS_STORAGE_KEY)
 
@@ -39,7 +52,12 @@ export const initialiseLibrary = () => {
 
   try {
     const books = JSON.parse(storedBooks)
-    return Array.isArray(books) ? books : cloneBooks(seedBooks)
+
+    if (!Array.isArray(books)) {
+      return cloneBooks(seedBooks)
+    }
+
+    return isLegacyBookCatalogue(books) ? saveBooks(cloneBooks(seedBooks)) : books
   } catch {
     return cloneBooks(seedBooks)
   }

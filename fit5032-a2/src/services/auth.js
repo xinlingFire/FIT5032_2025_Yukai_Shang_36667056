@@ -5,7 +5,7 @@ const SESSION_STORAGE_KEY = 'open-shelf-library-session'
 const ADMIN_EMAIL = 'admin@openshelf.local'
 const ADMIN_ACCOUNT = {
   id: 'open-shelf-admin',
-  name: 'Open Shelf Admin',
+  name: 'Open Shelf Health Coordinator',
   email: ADMIN_EMAIL,
   passwordHash: 'aa163422e098f8a463b38e5dedbe08d133d48fac0a8693582a48d3db59cd2a06',
   role: 'admin',

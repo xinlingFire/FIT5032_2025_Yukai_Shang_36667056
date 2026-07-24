@@ -70,8 +70,8 @@ const handleSubmit = async () => {
   <main class="auth-page">
     <section class="auth-card">
       <p class="eyebrow">Welcome back</p>
-      <h1>Log in to Open Shelf</h1>
-      <p class="auth-intro">Use the account you created on this device.</p>
+      <h1>Log in to Open Shelf Health</h1>
+      <p class="auth-intro">Use the account you created on this device to save health resources and share feedback.</p>
 
       <div v-if="route.query.reason === 'authentication-required'" class="alert alert-warning" role="status">
         Please log in to view your account.
@@ -115,7 +115,7 @@ const handleSubmit = async () => {
       </form>
 
       <p class="auth-switch">
-        New to Open Shelf?
+        New to Open Shelf Health?
         <RouterLink to="/register">Create an account</RouterLink>
       </p>
     </section>

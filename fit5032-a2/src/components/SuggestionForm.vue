@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 
-const SUGGESTIONS_STORAGE_KEY = 'open-shelf-book-suggestions'
+const SUGGESTIONS_STORAGE_KEY = 'open-shelf-resource-suggestions'
 
 const createEmptyForm = () => ({
   name: '',
@@ -36,7 +36,7 @@ const validators = {
       : 'Enter a valid email address.'
   },
   title(value) {
-    return value.trim().length >= 2 ? '' : 'Enter a book title with at least 2 characters.'
+    return value.trim().length >= 2 ? '' : 'Enter a resource name with at least 2 characters.'
   },
   reason(value) {
     const length = value.trim().length
@@ -120,7 +120,7 @@ const handleSubmit = () => {
 <template>
   <form class="suggestion-form" novalidate @submit.prevent="handleSubmit">
     <div v-if="submissionSucceeded" class="alert alert-success" role="status">
-      Thank you. Your book suggestion has been saved.
+      Thank you. Your resource suggestion has been saved.
     </div>
 
     <div class="row g-3">
@@ -157,7 +157,7 @@ const handleSubmit = () => {
       </div>
 
       <div class="col-12">
-        <label class="form-label" for="suggestion-title">Book title</label>
+        <label class="form-label" for="suggestion-title">Resource name</label>
         <input
           id="suggestion-title"
           v-model="form.title"
@@ -172,7 +172,7 @@ const handleSubmit = () => {
       </div>
 
       <div class="col-12">
-        <label class="form-label" for="suggestion-reason">Why should we add it?</label>
+        <label class="form-label" for="suggestion-reason">Why could this help the community?</label>
         <textarea
           id="suggestion-reason"
           v-model="form.reason"
@@ -188,6 +188,6 @@ const handleSubmit = () => {
       </div>
     </div>
 
-    <button class="btn btn-primary mt-4" type="submit">Send suggestion</button>
+    <button class="btn btn-primary mt-4" type="submit">Send resource suggestion</button>
   </form>
 </template>

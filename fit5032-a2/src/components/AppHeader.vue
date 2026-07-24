@@ -21,10 +21,10 @@ const handleLogout = () => {
   <header class="site-header">
     <div class="container d-flex align-items-center justify-content-between gap-3 py-3">
       <RouterLink class="brand" to="/" @click="closeMenu">
-        <span class="brand-mark" aria-hidden="true">OS</span>
+        <span class="brand-mark" aria-hidden="true">OH</span>
         <span>
-          <strong>Open Shelf</strong>
-          <small>Library catalogue</small>
+          <strong>Open Shelf Health</strong>
+          <small>Health resource hub</small>
         </span>
       </RouterLink>
 
@@ -39,9 +39,9 @@ const handleLogout = () => {
       </button>
 
       <nav :class="['site-nav', { 'is-open': menuIsOpen }]" aria-label="Main navigation">
-        <RouterLink to="/" @click="closeMenu">Catalogue</RouterLink>
-        <RouterLink :to="{ name: 'home', hash: '#suggest' }" @click="closeMenu">Suggest a book</RouterLink>
-        <RouterLink :to="{ name: 'home', hash: '#about' }" @click="closeMenu">About</RouterLink>
+        <RouterLink to="/" @click="closeMenu">Health resources</RouterLink>
+        <RouterLink :to="{ name: 'home', hash: '#suggest' }" @click="closeMenu">Suggest a resource</RouterLink>
+        <RouterLink :to="{ name: 'home', hash: '#about' }" @click="closeMenu">About us</RouterLink>
         <template v-if="isAuthenticated">
           <RouterLink to="/account" @click="closeMenu">My account</RouterLink>
           <RouterLink
@@ -49,7 +49,7 @@ const handleLogout = () => {
             to="/admin"
             @click="closeMenu"
           >
-            Manage library
+            Manage resources
           </RouterLink>
           <span class="nav-user">{{ currentUser?.name }}</span>
           <button class="nav-logout" type="button" @click="handleLogout">Log out</button>

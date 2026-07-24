@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import BookEngagementPanel from '../components/BookEngagementPanel.vue'
+import HealthSafetyNotice from '../components/HealthSafetyNotice.vue'
 import { getBookById } from '../services/libraryStore'
 
 const route = useRoute()
@@ -10,7 +11,7 @@ const book = computed(() => getBookById(route.params.id))
 
 <template>
   <main class="container detail-page">
-    <RouterLink class="back-link" to="/">&larr; Back to catalogue</RouterLink>
+    <RouterLink class="back-link" to="/">&larr; Back to health resources</RouterLink>
 
     <section v-if="book" class="detail-layout">
       <div class="detail-cover" :style="{ '--cover-colour': book.accent }" aria-hidden="true">
@@ -20,14 +21,14 @@ const book = computed(() => getBookById(route.params.id))
       <div class="detail-content">
         <p class="book-category">{{ book.category }}</p>
         <h1>{{ book.title }}</h1>
-        <p class="detail-author">by {{ book.author }}</p>
+        <p class="detail-author">Provided by {{ book.author }}</p>
         <dl class="book-metadata">
           <div>
-            <dt>Published</dt>
+            <dt>Last updated</dt>
             <dd>{{ book.year }}</dd>
           </div>
           <div>
-            <dt>Category</dt>
+            <dt>Health topic</dt>
             <dd>{{ book.category }}</dd>
           </div>
         </dl>
@@ -35,12 +36,14 @@ const book = computed(() => getBookById(route.params.id))
       </div>
     </section>
 
+    <HealthSafetyNotice v-if="book" />
+
     <BookEngagementPanel v-if="book" :key="book.id" :book="book" />
 
     <section v-else class="empty-state detail-empty">
-      <h1>Book not found</h1>
-      <p>The requested book is not available in this catalogue.</p>
-      <RouterLink class="btn btn-primary" to="/">Return to catalogue</RouterLink>
+      <h1>Resource not found</h1>
+      <p>The requested health resource is not available in this hub.</p>
+      <RouterLink class="btn btn-primary" to="/">Return to health resources</RouterLink>
     </section>
   </main>
 </template>

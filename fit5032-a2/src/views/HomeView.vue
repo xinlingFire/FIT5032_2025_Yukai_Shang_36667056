@@ -2,7 +2,9 @@
 import { computed, ref } from 'vue'
 import BookCard from '../components/BookCard.vue'
 import CatalogFilters from '../components/CatalogFilters.vue'
+import HealthSafetyNotice from '../components/HealthSafetyNotice.vue'
 import SuggestionForm from '../components/SuggestionForm.vue'
+import communityHealthWorkshop from '../assets/community-health-workshop.jpg'
 import { getRatingSummaries } from '../services/engagementStore'
 import { initialiseLibrary } from '../services/libraryStore'
 
@@ -39,16 +41,24 @@ const resetFilters = () => {
 <template>
   <main>
     <section class="catalogue-hero">
+      <img
+        class="hero-image"
+        :src="communityHealthWorkshop"
+        alt="Community members joining a health information workshop"
+      />
       <div class="container">
-        <p class="eyebrow">Discover your next read</p>
-        <h1>Books for curious minds.</h1>
+        <p class="eyebrow">For people new to Australia</p>
+        <h1>Find health information you can use.</h1>
         <p class="hero-copy">
-          Browse a considered collection of fiction, ideas and practical knowledge from Open Shelf.
+          Open Shelf Health Connect brings together clear starting points for understanding health services,
+          wellbeing and support in your new community.
         </p>
       </div>
     </section>
 
     <section class="container catalogue-section">
+      <HealthSafetyNotice />
+
       <CatalogFilters
         v-model:search-term="searchTerm"
         v-model:selected-category="selectedCategory"
@@ -64,19 +74,19 @@ const resetFilters = () => {
       </div>
 
       <div v-else class="empty-state">
-        <h2>No matching books</h2>
-        <p>Try a different title, author or category.</p>
-        <button class="btn btn-primary" type="button" @click="resetFilters">Show all books</button>
+        <h2>No matching resources</h2>
+        <p>Try a different resource name, provider or health topic.</p>
+        <button class="btn btn-primary" type="button" @click="resetFilters">Show all resources</button>
       </div>
     </section>
 
     <section id="suggest" class="suggestion-band">
       <div class="container suggestion-layout">
         <div class="suggestion-intro">
-          <p class="eyebrow">Build the collection</p>
-          <h2>Recommend a book.</h2>
+          <p class="eyebrow">Shape the resource hub</p>
+          <h2>Suggest a health resource.</h2>
           <p>
-            Tell Open Shelf about a title that belongs in the catalogue.
+            Tell Open Shelf Health Connect about a trusted resource that could help people settling into Australia.
           </p>
         </div>
         <SuggestionForm />
@@ -85,10 +95,11 @@ const resetFilters = () => {
 
     <section id="about" class="about-band">
       <div class="container about-content">
-        <p class="eyebrow">About Open Shelf</p>
-        <h2>A simple catalogue, designed for exploration.</h2>
+        <p class="eyebrow">About Open Shelf Health Connect</p>
+        <h2>Clear health resources for new community members.</h2>
         <p>
-          Open Shelf brings together dynamic book discovery, personal accounts and reader recommendations.
+          We help newly arrived migrants find general health information, save useful resources and share feedback
+          with the community.
         </p>
       </div>
     </section>

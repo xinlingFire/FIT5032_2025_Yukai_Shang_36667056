@@ -1,82 +1,82 @@
 export const seedBooks = [
   {
-    id: 'the-left-hand-of-darkness',
-    title: 'The Left Hand of Darkness',
-    author: 'Ursula K. Le Guin',
-    category: 'Science Fiction',
-    year: 1969,
-    accent: '#2962a8',
+    id: 'finding-a-gp-and-medicare',
+    title: 'Finding a GP and using Medicare',
+    author: 'Healthdirect Australia',
+    category: 'Health care access',
+    year: 2025,
+    accent: '#176a7c',
     description:
-      'A diplomat travels to the icy world of Gethen, where a society without fixed gender reshapes every assumption he brings with him.'
+      'A plain-language starting point for understanding general practitioners, appointments and the Medicare system after arriving in Australia.'
   },
   {
-    id: 'pachinko',
-    title: 'Pachinko',
-    author: 'Min Jin Lee',
-    category: 'Historical Fiction',
-    year: 2017,
-    accent: '#b44e39',
-    description:
-      'Four generations of a Korean family build a life in Japan through changing fortunes, hard choices and enduring loyalty.'
-  },
-  {
-    id: 'braiding-sweetgrass',
-    title: 'Braiding Sweetgrass',
-    author: 'Robin Wall Kimmerer',
-    category: 'Nature',
-    year: 2013,
-    accent: '#39785b',
-    description:
-      'Essays that bring scientific knowledge and Indigenous wisdom together to consider reciprocity with the living world.'
-  },
-  {
-    id: 'klara-and-the-sun',
-    title: 'Klara and the Sun',
-    author: 'Kazuo Ishiguro',
-    category: 'Literary Fiction',
-    year: 2021,
-    accent: '#895893',
-    description:
-      'An observant artificial friend watches a family grapple with love, illness and the cost of a carefully engineered future.'
-  },
-  {
-    id: 'atomic-habits',
-    title: 'Atomic Habits',
-    author: 'James Clear',
-    category: 'Personal Development',
-    year: 2018,
-    accent: '#bd7a22',
-    description:
-      'A practical guide to building better systems through small, repeatable changes rather than relying on willpower alone.'
-  },
-  {
-    id: 'the-song-of-achilles',
-    title: 'The Song of Achilles',
-    author: 'Madeline Miller',
-    category: 'Mythology',
-    year: 2011,
+    id: 'using-an-interpreter',
+    title: 'Asking for an interpreter at a health appointment',
+    author: 'Translating and Interpreting Service',
+    category: 'Language support',
+    year: 2025,
     accent: '#a54459',
     description:
-      'Patroclus recounts his friendship and love with Achilles against the approaching violence of the Trojan War.'
+      'Learn why a professional interpreter can help you communicate clearly and confidently with a doctor or health service.'
   },
   {
-    id: 'thinking-fast-and-slow',
-    title: 'Thinking, Fast and Slow',
-    author: 'Daniel Kahneman',
-    category: 'Psychology',
-    year: 2011,
+    id: 'mental-wellbeing-support',
+    title: 'Looking after your mental wellbeing',
+    author: 'Beyond Blue',
+    category: 'Mental wellbeing',
+    year: 2025,
+    accent: '#895893',
+    description:
+      'Information about everyday mental wellbeing, talking with someone you trust and finding suitable support in Australia.'
+  },
+  {
+    id: 'child-and-family-health',
+    title: 'Child and family health services',
+    author: 'Raising Children Network',
+    category: 'Children and families',
+    year: 2025,
+    accent: '#b44e39',
+    description:
+      'An introduction to child health checks, parenting support and questions families may wish to discuss with a health professional.'
+  },
+  {
+    id: 'food-and-movement',
+    title: 'Healthy food and movement on a budget',
+    author: 'Nutrition Australia',
+    category: 'Everyday wellbeing',
+    year: 2024,
+    accent: '#bd7a22',
+    description:
+      'Ideas for affordable meals, gentle movement and building healthy routines while settling into a new community.'
+  },
+  {
+    id: 'vaccination-questions',
+    title: 'Preparing questions about vaccinations',
+    author: 'Australian Government Department of Health',
+    category: 'Preventive health',
+    year: 2025,
+    accent: '#39785b',
+    description:
+      'A guide to the questions you can take to a qualified health professional when discussing vaccinations for yourself or your family.'
+  },
+  {
+    id: 'supporting-older-relatives',
+    title: 'Support for older relatives',
+    author: 'My Aged Care',
+    category: 'Older people',
+    year: 2025,
     accent: '#2d737d',
     description:
-      'A clear tour of the fast, intuitive and slow, deliberate thinking systems that shape everyday judgement.'
+      'Explore services that may support older people with daily living, health needs and connections in their local community.'
   },
   {
-    id: 'the-midnight-library',
-    title: 'The Midnight Library',
-    author: 'Matt Haig',
-    category: 'Fantasy',
-    year: 2020,
+    id: 'when-to-seek-urgent-help',
+    title: 'When to seek urgent medical help',
+    author: 'Healthdirect Australia',
+    category: 'Urgent help',
+    year: 2025,
     accent: '#514a9e',
     description:
-      'At the edge of despair, Nora Seed enters a library that lets her explore the lives she might have lived.'
+      'A general guide to choosing urgent care and emergency services. In an emergency, call 000 for an ambulance.'
   }
 ]

@@ -25,10 +25,10 @@ const userHasRating = ref(false)
 
 const isStudent = computed(() => currentUser.value?.role === 'student')
 const favouriteLabel = computed(() =>
-  isFavourite.value ? 'Remove from favourites' : 'Save to favourites'
+  isFavourite.value ? 'Remove from saved resources' : 'Save this resource'
 )
 const reviewButtonLabel = computed(() =>
-  userHasRating.value ? 'Update review' : 'Save review'
+  userHasRating.value ? 'Update feedback' : 'Save feedback'
 )
 
 const refreshEngagement = () => {
@@ -61,12 +61,12 @@ const handleSubmit = () => {
   reviewSaved.value = false
 
   if (!reviewForm.score) {
-    error.value = 'Select a rating from 1 to 5.'
+    error.value = 'Select a usefulness rating from 1 to 5.'
     return
   }
 
   if (reviewForm.comment.trim().length < 10 || reviewForm.comment.trim().length > 500) {
-    error.value = 'Write a review between 10 and 500 characters.'
+    error.value = 'Write feedback between 10 and 500 characters.'
     return
   }
 
@@ -91,10 +91,10 @@ watch(
   <section class="engagement-panel" :aria-labelledby="`reviews-${book.id}`">
     <div class="rating-summary">
       <div>
-        <p class="eyebrow">Reader ratings</p>
+        <p class="eyebrow">Community feedback</p>
         <h2 :id="`reviews-${book.id}`">{{ summary.average ?? 'New' }}<span v-if="summary.average">/5</span></h2>
       </div>
-      <p>{{ summary.count ? `${summary.count} ${summary.count === 1 ? 'review' : 'reviews'}` : 'No reviews yet' }}</p>
+      <p>{{ summary.count ? `${summary.count} ${summary.count === 1 ? 'response' : 'responses'}` : 'No feedback yet' }}</p>
     </div>
 
     <template v-if="isStudent">
@@ -105,7 +105,7 @@ watch(
 
       <form class="review-form" novalidate @submit.prevent="handleSubmit">
         <fieldset>
-          <legend>Rate this book</legend>
+          <legend>Was this resource useful?</legend>
           <div class="score-picker">
             <label v-for="score in 5" :key="score" :class="{ selected: reviewForm.score === score }">
               <input v-model.number="reviewForm.score" type="radio" name="book-score" :value="score" />
@@ -114,7 +114,7 @@ watch(
           </div>
         </fieldset>
 
-        <label class="form-label" :for="`review-${book.id}`">Your review</label>
+        <label class="form-label" :for="`review-${book.id}`">Your feedback</label>
         <textarea
           :id="`review-${book.id}`"
           v-model="reviewForm.comment"
@@ -127,20 +127,20 @@ watch(
         ></textarea>
         <div id="review-error" class="invalid-feedback">{{ error }}</div>
 
-        <p v-if="reviewSaved" class="review-saved" role="status">Your review has been saved.</p>
+        <p v-if="reviewSaved" class="review-saved" role="status">Your feedback has been saved.</p>
         <button class="btn btn-primary mt-3" type="submit">{{ reviewButtonLabel }}</button>
       </form>
     </template>
 
     <p v-else-if="!currentUser" class="engagement-sign-in">
       <RouterLink :to="{ name: 'login', query: { redirect: `/books/${book.id}` } }">Log in</RouterLink>
-      to save a favourite or review this book.
+      to save this resource or share feedback.
     </p>
 
     <div v-if="reviews.length" class="review-list">
       <article v-for="review in reviews" :key="review.id" class="review-item">
         <div>
-          <strong>{{ reviewerNames.get(review.userId) ?? 'Open Shelf reader' }}</strong>
+          <strong>{{ reviewerNames.get(review.userId) ?? 'Open Shelf community member' }}</strong>
           <span>{{ review.score }}/5</span>
         </div>
         <p>{{ review.comment }}</p>

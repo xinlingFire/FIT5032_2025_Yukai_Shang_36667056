@@ -142,9 +142,30 @@ a {
 }
 
 .catalogue-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: 5.5rem 0 4.5rem;
   color: #fff;
   background-color: #203846;
+}
+
+.hero-image {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 68% center;
+}
+
+.catalogue-hero::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: rgba(18, 56, 65, 0.68);
+  content: '';
 }
 
 .eyebrow {
@@ -181,6 +202,32 @@ a {
 .catalogue-section {
   padding-top: 2.5rem;
   padding-bottom: 4.5rem;
+}
+
+.health-safety-notice {
+  max-width: 58rem;
+  margin: 0 0 2.25rem;
+  padding: 1.1rem 1.25rem;
+  border-left: 4px solid var(--gold);
+  background: #fff8e7;
+  color: #503f20;
+}
+
+.health-safety-notice .eyebrow {
+  margin-bottom: 0.35rem;
+  color: #805918;
+}
+
+.health-safety-notice h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+}
+
+.health-safety-notice p:last-child {
+  margin: 0.5rem 0 0;
+  line-height: 1.55;
 }
 
 .filter-panel {
@@ -474,6 +521,11 @@ a {
   color: var(--muted);
   font-size: 1.05rem;
   line-height: 1.75;
+}
+
+.detail-page > .health-safety-notice {
+  max-width: 950px;
+  margin: 2.5rem auto 0;
 }
 
 .future-feature-note {
@@ -957,6 +1009,10 @@ a {
 
   .catalogue-hero {
     padding: 4.25rem 0 3.5rem;
+  }
+
+  .hero-image {
+    object-position: 62% center;
   }
 
   .detail-layout {

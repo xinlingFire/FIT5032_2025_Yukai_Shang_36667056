@@ -19,21 +19,21 @@ const handleBooksChanged = (changedBooks) => {
 <template>
   <main class="admin-page">
     <div class="container">
-      <p class="eyebrow">Administrator area</p>
-      <h1>Catalogue management centre</h1>
-      <p class="admin-intro">Review the current catalogue and registered community at a glance.</p>
+      <p class="eyebrow">Service coordinator area</p>
+      <h1>Health resource management centre</h1>
+      <p class="admin-intro">Review the current health resources and registered community at a glance.</p>
 
-      <section class="admin-stats" aria-label="Library overview">
+      <section class="admin-stats" aria-label="Health resource overview">
         <article class="admin-stat">
-          <span>Catalogue books</span>
+          <span>Health resources</span>
           <strong>{{ books.length }}</strong>
         </article>
         <article class="admin-stat">
-          <span>Registered students</span>
+          <span>Registered community members</span>
           <strong>{{ studentCount }}</strong>
         </article>
         <article class="admin-stat">
-          <span>Administrator accounts</span>
+          <span>Service coordinator accounts</span>
           <strong>{{ members.length - studentCount }}</strong>
         </article>
       </section>
@@ -42,7 +42,7 @@ const handleBooksChanged = (changedBooks) => {
         <div class="admin-section-heading">
           <div>
             <p class="eyebrow">Accounts</p>
-            <h2 id="members-heading">Registered members</h2>
+            <h2 id="members-heading">Registered community members</h2>
           </div>
           <span>{{ members.length }} total</span>
         </div>
@@ -62,7 +62,9 @@ const handleBooksChanged = (changedBooks) => {
                 <td>{{ member.name }}</td>
                 <td>{{ member.email }}</td>
                 <td>
-                  <span :class="['role-label', `role-${member.role}`]">{{ member.role }}</span>
+                  <span :class="['role-label', `role-${member.role}`]">
+                    {{ member.role === 'admin' ? 'Service coordinator' : 'Community member' }}
+                  </span>
                 </td>
                 <td>{{ new Date(member.createdAt).toLocaleDateString() }}</td>
               </tr>

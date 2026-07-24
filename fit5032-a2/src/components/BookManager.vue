@@ -40,24 +40,24 @@ const editorIsOpen = ref(false)
 const editingId = ref(null)
 const hasSubmitted = ref(false)
 
-const formTitle = computed(() => (editingId.value ? 'Edit book' : 'Add a book'))
+const formTitle = computed(() => (editingId.value ? 'Edit resource' : 'Add a resource'))
 
 const validators = {
   title(value) {
-    return value.trim().length >= 2 ? '' : 'Enter a title with at least 2 characters.'
+    return value.trim().length >= 2 ? '' : 'Enter a resource name with at least 2 characters.'
   },
   author(value) {
-    return value.trim().length >= 2 ? '' : 'Enter an author name with at least 2 characters.'
+    return value.trim().length >= 2 ? '' : 'Enter a provider name with at least 2 characters.'
   },
   category(value) {
-    return value.trim().length >= 2 ? '' : 'Enter a category with at least 2 characters.'
+    return value.trim().length >= 2 ? '' : 'Enter a health topic with at least 2 characters.'
   },
   year(value) {
     const year = Number(value)
     const currentYear = new Date().getFullYear()
     return Number.isInteger(year) && year >= 1450 && year <= currentYear
       ? ''
-      : `Enter a year from 1450 to ${currentYear}.`
+      : `Enter a year from 1900 to ${currentYear}.`
   },
   description(value) {
     const length = value.trim().length
@@ -146,7 +146,7 @@ const handleSubmit = () => {
 }
 
 const handleDelete = (book) => {
-  const shouldDelete = window.confirm(`Remove "${book.title}" from the catalogue?`)
+  const shouldDelete = window.confirm(`Remove "${book.title}" from the health resource hub?`)
 
   if (shouldDelete) {
     clearBookEngagement(book.id)
@@ -156,20 +156,20 @@ const handleDelete = (book) => {
 </script>
 
 <template>
-  <section class="admin-table-section" aria-labelledby="books-heading">
+  <section class="admin-table-section" aria-labelledby="resources-heading">
     <div class="admin-section-heading">
       <div>
-        <p class="eyebrow">Catalogue</p>
-        <h2 id="books-heading">Manage books</h2>
+        <p class="eyebrow">Health resource hub</p>
+        <h2 id="resources-heading">Manage resources</h2>
       </div>
-      <button class="btn btn-primary" type="button" @click="openCreateEditor">Add book</button>
+      <button class="btn btn-primary" type="button" @click="openCreateEditor">Add resource</button>
     </div>
 
     <form
       v-if="editorIsOpen"
       class="book-editor"
       data-testid="book-editor"
-      aria-label="Book editor"
+      aria-label="Health resource editor"
       novalidate
       @submit.prevent="handleSubmit"
     >
@@ -180,7 +180,7 @@ const handleDelete = (book) => {
 
       <div class="row g-3">
         <div class="col-12 col-md-6">
-          <label class="form-label" for="book-title">Title</label>
+          <label class="form-label" for="book-title">Resource name</label>
           <input
             id="book-title"
             v-model="form.title"
@@ -195,7 +195,7 @@ const handleDelete = (book) => {
         </div>
 
         <div class="col-12 col-md-6">
-          <label class="form-label" for="book-author">Author</label>
+          <label class="form-label" for="book-author">Provider</label>
           <input
             id="book-author"
             v-model="form.author"
@@ -210,7 +210,7 @@ const handleDelete = (book) => {
         </div>
 
         <div class="col-12 col-md-5">
-          <label class="form-label" for="book-category">Category</label>
+          <label class="form-label" for="book-category">Health topic</label>
           <input
             id="book-category"
             v-model="form.category"
@@ -225,14 +225,14 @@ const handleDelete = (book) => {
         </div>
 
         <div class="col-8 col-md-4">
-          <label class="form-label" for="book-year">Publication year</label>
+          <label class="form-label" for="book-year">Last updated</label>
           <input
             id="book-year"
             v-model="form.year"
             class="form-control"
             :class="{ 'is-invalid': errors.year }"
             type="number"
-            min="1450"
+            min="1900"
             :max="new Date().getFullYear()"
             aria-describedby="book-year-error"
             @blur="handleBlur('year')"
@@ -242,7 +242,7 @@ const handleDelete = (book) => {
         </div>
 
         <div class="col-4 col-md-3">
-          <label class="form-label" for="book-colour">Cover colour</label>
+          <label class="form-label" for="book-colour">Resource colour</label>
           <input
             id="book-colour"
             v-model="form.accent"
@@ -253,7 +253,7 @@ const handleDelete = (book) => {
         </div>
 
         <div class="col-12">
-          <label class="form-label" for="book-description">Description</label>
+          <label class="form-label" for="book-description">Plain-language summary</label>
           <textarea
             id="book-description"
             v-model="form.description"
@@ -270,7 +270,7 @@ const handleDelete = (book) => {
       </div>
 
       <button class="btn btn-primary mt-4" type="submit">
-        {{ editingId ? 'Save changes' : 'Add book' }}
+        {{ editingId ? 'Save changes' : 'Add resource' }}
       </button>
     </form>
 
@@ -278,10 +278,10 @@ const handleDelete = (book) => {
       <table class="table align-middle mb-0">
         <thead>
           <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Author</th>
-            <th scope="col">Category</th>
-            <th scope="col">Year</th>
+            <th scope="col">Resource</th>
+            <th scope="col">Provider</th>
+            <th scope="col">Health topic</th>
+            <th scope="col">Updated</th>
             <th scope="col"><span class="visually-hidden">Actions</span></th>
           </tr>
         </thead>
@@ -295,7 +295,7 @@ const handleDelete = (book) => {
               <button
                 class="btn btn-sm btn-outline-secondary"
                 type="button"
-                :aria-label="`Edit ${book.title}`"
+                :aria-label="`Edit resource: ${book.title}`"
                 @click="openEditEditor(book)"
               >
                 Edit
@@ -303,7 +303,7 @@ const handleDelete = (book) => {
               <button
                 class="btn btn-sm btn-outline-danger"
                 type="button"
-                :aria-label="`Delete ${book.title}`"
+                :aria-label="`Delete resource: ${book.title}`"
                 @click="handleDelete(book)"
               >
                 Delete

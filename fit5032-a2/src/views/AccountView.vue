@@ -26,9 +26,9 @@ const handleLogout = () => {
   <main class="account-page">
     <div class="account-content">
       <section class="account-card">
-        <p class="eyebrow">Your Open Shelf account</p>
+        <p class="eyebrow">Your Open Shelf Health account</p>
         <h1>Welcome, {{ currentUser?.name }}.</h1>
-        <p class="account-intro">You are logged in and can continue browsing the catalogue.</p>
+        <p class="account-intro">You are logged in and can continue exploring trusted health resources.</p>
 
         <dl class="account-details">
           <div>
@@ -41,19 +41,19 @@ const handleLogout = () => {
           </div>
           <div>
             <dt>Access level</dt>
-            <dd class="text-capitalize">{{ currentUser?.role }}</dd>
+            <dd>{{ currentUser?.role === 'admin' ? 'Service coordinator' : 'Community member' }}</dd>
           </div>
         </dl>
 
         <div class="d-flex flex-wrap gap-3">
-          <RouterLink class="btn btn-primary" to="/">Browse catalogue</RouterLink>
+          <RouterLink class="btn btn-primary" to="/">Browse health resources</RouterLink>
           <button class="btn btn-outline-secondary" type="button" @click="handleLogout">Log out</button>
         </div>
       </section>
 
       <section v-if="currentUser?.role === 'student'" class="account-favourites">
-        <p class="eyebrow">Saved books</p>
-        <h2>Your favourites</h2>
+        <p class="eyebrow">Saved resources</p>
+        <h2>Your saved resources</h2>
         <ul v-if="favouriteBooks.length" class="favourite-list">
           <li v-for="book in favouriteBooks" :key="book.id">
             <RouterLink :to="{ name: 'book-detail', params: { id: book.id } }">
@@ -62,7 +62,7 @@ const handleLogout = () => {
             </RouterLink>
           </li>
         </ul>
-        <p v-else class="empty-favourites">Save books from their detail pages to find them here.</p>
+        <p v-else class="empty-favourites">Save resources from their detail pages to find them here.</p>
       </section>
     </div>
   </main>

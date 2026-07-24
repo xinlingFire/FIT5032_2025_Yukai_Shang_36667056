@@ -1,6 +1,6 @@
-# Open Shelf Library Catalogue
+# Open Shelf Health Connect
 
-First-stage implementation for FIT5032 Assessment 2. The application is a responsive Vue 3 library catalogue with dynamic Local Storage-backed book data.
+Open Shelf Health Connect is a responsive Vue 3 health-resource hub for newly arrived migrant communities in Australia. It helps community members browse plain-language starting points, save useful resources and share feedback. It provides general information only and is not a medical advice, diagnosis or emergency-response service.
 
 ## Run locally
 
@@ -15,27 +15,34 @@ For a production check:
 npm run build
 ```
 
-## Included in this stage
+## Included functionality
 
-- Responsive catalogue navigation and layout
-- Book grid and book detail routes
-- Title/author search and category filtering
-- Browser Local Storage initialisation from seed book data
-- Book recommendation form with name, email and text-length validation
-- Valid book suggestions saved in browser Local Storage
-- Account registration, login, logout and persistent browser session
-- Authenticated account page with navigation guard
-- Student and administrator account roles with an administrator-only dashboard
-- Administrator-only book creation, editing and deletion with Local Storage persistence
-- Student favourites, reviews, individual 1-5 ratings and aggregate book rating scores
-- Not-found route
+- Responsive health resource hub with a community-health hero image
+- Keyword search by resource name or provider, plus health-topic filtering
+- Browser Local Storage initialisation from eight health-resource records
+- General health-information and emergency `000` safety notices on the home and resource-detail pages
+- Resource suggestion form with name, email and text-length validation
+- Registration, login, logout and persistent local browser session
+- Community member and service coordinator roles with an administrator-only management area
+- Service coordinator resource creation, editing and deletion with Local Storage persistence
+- Community member saved resources, individual 1-5 usefulness ratings and aggregate feedback scores
+- Not-found and access-denied pages
 
-## Not included yet
+## Scope and safety
 
+The app provides general health-resource navigation only. It does not diagnose conditions, provide clinical advice, process payments, book appointments or handle emergencies. For urgent help in Australia, call `000`.
 
-## Administrator demo account
+The authentication and role checks are front-end demonstrations backed by browser Local Storage. They are suitable for the assessment prototype only, not for a real health service.
+
+## Demo service coordinator account
 
 - Email: `admin@openshelf.local`
 - Password: `AdminPass2026!`
 
-To reset the sample catalogue, remove the `open-shelf-library-books` entry from the browser's Local Storage and reload the application.
+## Reset local data
+
+To load the health-resource seed data after using an older catalogue version, remove the `open-shelf-library-books` entry from the browser's Local Storage and reload the application. The legacy key is intentionally retained to avoid changing the existing data-flow implementation.
+
+## Visual acknowledgement
+
+The homepage community-workshop image is sourced from Unsplash for this assessment prototype. Any final submission should retain appropriate attribution and declare all external or AI-assisted content in the assessment acknowledgement.

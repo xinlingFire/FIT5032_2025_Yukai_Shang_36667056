@@ -20,15 +20,15 @@ defineProps({
     <div class="book-card-body">
       <p class="book-category">{{ book.category }}</p>
       <h2>{{ book.title }}</h2>
-      <p class="book-author">{{ book.author }}</p>
+      <p class="book-author">Provided by {{ book.author }}</p>
       <p class="book-rating">
         <span aria-hidden="true">★</span>
         {{ ratingSummary.average ?? 'New' }}
-        <span class="rating-count">{{ ratingSummary.count ? `(${ratingSummary.count})` : 'No ratings' }}</span>
+        <span class="rating-count">{{ ratingSummary.count ? `(${ratingSummary.count})` : 'No feedback yet' }}</span>
       </p>
       <p class="book-summary">{{ book.description }}</p>
       <RouterLink class="book-link" :to="{ name: 'book-detail', params: { id: book.id } }">
-        View details <span aria-hidden="true">&rarr;</span>
+        View resource <span aria-hidden="true">&rarr;</span>
       </RouterLink>
     </div>
   </article>

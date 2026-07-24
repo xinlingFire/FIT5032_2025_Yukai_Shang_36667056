@@ -22,28 +22,28 @@ const emit = defineEmits(['update:searchTerm', 'update:selectedCategory', 'reset
 </script>
 
 <template>
-  <section class="filter-panel" aria-label="Catalogue filters">
+  <section class="filter-panel" aria-label="Health resource filters">
     <div class="row g-3 align-items-end">
       <div class="col-12 col-md-7">
-        <label class="form-label" for="catalogue-search">Search the catalogue</label>
+        <label class="form-label" for="catalogue-search">Search health resources</label>
         <input
           id="catalogue-search"
           class="form-control form-control-lg"
           type="search"
           :value="searchTerm"
-          placeholder="Search by title or author"
+          placeholder="Search by resource or provider"
           @input="emit('update:searchTerm', $event.target.value)"
         />
       </div>
       <div class="col-8 col-md-3">
-        <label class="form-label" for="category-filter">Category</label>
+        <label class="form-label" for="category-filter">Health topic</label>
         <select
           id="category-filter"
           class="form-select form-select-lg"
           :value="selectedCategory"
           @change="emit('update:selectedCategory', $event.target.value)"
         >
-          <option value="">All categories</option>
+          <option value="">All health topics</option>
           <option v-for="category in categories" :key="category" :value="category">
             {{ category }}
           </option>
@@ -56,7 +56,7 @@ const emit = defineEmits(['update:searchTerm', 'update:selectedCategory', 'reset
       </div>
     </div>
     <p class="result-count mb-0 mt-3" aria-live="polite">
-      {{ resultCount }} {{ resultCount === 1 ? 'book' : 'books' }} found
+      {{ resultCount }} {{ resultCount === 1 ? 'resource' : 'resources' }} found
     </p>
   </section>
 </template>

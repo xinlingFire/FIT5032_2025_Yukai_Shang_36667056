@@ -92,9 +92,9 @@ const handleSubmit = async () => {
 <template>
   <main class="auth-page">
     <section class="auth-card">
-      <p class="eyebrow">Open Shelf account</p>
+      <p class="eyebrow">Open Shelf Health account</p>
       <h1>Create your account</h1>
-      <p class="auth-intro">Save your place in the catalogue and return whenever you are ready.</p>
+      <p class="auth-intro">Create a community member account to save helpful health resources and return to them later.</p>
 
       <div v-if="accountError" class="alert alert-danger" role="alert">{{ accountError }}</div>
 
