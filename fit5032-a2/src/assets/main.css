@@ -94,6 +94,35 @@ a {
   color: var(--blue);
 }
 
+.nav-user {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.nav-logout {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.nav-logout:hover {
+  color: var(--blue);
+}
+
+.nav-register {
+  padding: 0.48rem 0.72rem;
+  border-radius: 4px;
+  background: var(--blue);
+  color: #fff !important;
+}
+
+.nav-register:hover {
+  background: var(--blue-dark);
+}
+
 .menu-toggle {
   display: inline-grid;
   gap: 0.25rem;
@@ -462,6 +491,79 @@ a {
   line-height: 1.7;
 }
 
+.auth-page,
+.account-page {
+  display: grid;
+  min-height: calc(100vh - 76px);
+  padding: 4rem 1.5rem;
+  place-items: start center;
+  background: #eef3f2;
+}
+
+.auth-card,
+.account-card {
+  width: min(100%, 34rem);
+  padding: clamp(1.5rem, 5vw, 2.75rem);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 16px 32px rgba(23, 35, 52, 0.08);
+}
+
+.auth-card h1,
+.account-card h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.1;
+}
+
+.auth-intro,
+.account-intro {
+  margin: 1rem 0 2rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.auth-switch {
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+.auth-switch a {
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.account-details {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 2rem;
+}
+
+.account-details div {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f7f9f9;
+}
+
+.account-details dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.account-details dd {
+  margin: 0.35rem 0 0;
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
 @media (max-width: 767.98px) {
   .site-header .container {
     position: relative;
@@ -489,6 +591,16 @@ a {
 
   .site-nav a {
     padding: 0.75rem;
+  }
+
+  .site-nav .nav-user,
+  .site-nav .nav-logout {
+    padding: 0.75rem;
+  }
+
+  .site-nav .nav-register {
+    margin: 0.4rem;
+    text-align: center;
   }
 
   .catalogue-hero {

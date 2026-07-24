@@ -1,10 +1,19 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { currentUser, isAuthenticated, logout } from '../services/auth'
 
 const menuIsOpen = ref(false)
+const router = useRouter()
 
 const closeMenu = () => {
   menuIsOpen.value = false
+}
+
+const handleLogout = () => {
+  logout()
+  closeMenu()
+  router.push({ name: 'home' })
 }
 </script>
 
@@ -31,8 +40,17 @@ const closeMenu = () => {
 
       <nav :class="['site-nav', { 'is-open': menuIsOpen }]" aria-label="Main navigation">
         <RouterLink to="/" @click="closeMenu">Catalogue</RouterLink>
-        <a href="#suggest" @click="closeMenu">Suggest a book</a>
-        <a href="#about" @click="closeMenu">About</a>
+        <RouterLink :to="{ name: 'home', hash: '#suggest' }" @click="closeMenu">Suggest a book</RouterLink>
+        <RouterLink :to="{ name: 'home', hash: '#about' }" @click="closeMenu">About</RouterLink>
+        <template v-if="isAuthenticated">
+          <RouterLink to="/account" @click="closeMenu">My account</RouterLink>
+          <span class="nav-user">{{ currentUser?.name }}</span>
+          <button class="nav-logout" type="button" @click="handleLogout">Log out</button>
+        </template>
+        <template v-else>
+          <RouterLink to="/login" @click="closeMenu">Log in</RouterLink>
+          <RouterLink class="nav-register" to="/register" @click="closeMenu">Create account</RouterLink>
+        </template>
       </nav>
     </div>
   </header>

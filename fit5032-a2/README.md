@@ -23,13 +23,14 @@ npm run build
 - Browser Local Storage initialisation from seed book data
 - Book recommendation form with name, email and text-length validation
 - Valid book suggestions saved in browser Local Storage
+- Account registration, login, logout and persistent browser session
+- Authenticated account page with navigation guard
 - Not-found route
 
 ## Not included yet
 
-- Account registration, login or logout
-- Student and administrator roles
-- Account, login and book management forms
+- Student and administrator roles or authorisation levels
+- Administrator book management forms
 - Favourites, reviews, ratings or aggregate scores
 
 To reset the sample catalogue, remove the `open-shelf-library-books` entry from the browser's Local Storage and reload the application.
