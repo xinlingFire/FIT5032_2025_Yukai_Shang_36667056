@@ -5,6 +5,11 @@ import {
   isAuthenticated,
   logout
 } from '../auth'
+import { signOut } from 'firebase/auth'
+import {
+  firebaseAuth,
+  firebaseCurrentUser
+} from '../firebase'
 
 const router = useRouter()
 
@@ -14,6 +19,16 @@ const handleLogout = () => {
   router.push({
     name: 'login'
   })
+}
+
+const handleFirebaseLogout = async () => {
+  await signOut(firebaseAuth)
+  console.log(
+    'Current Firebase user after logout:',
+    firebaseAuth.currentUser
+  )
+
+  router.push({ name: 'FireLogin' })
 }
 </script>
 
@@ -71,6 +86,24 @@ const handleLogout = () => {
             Firebase register
           </RouterLink>
         </li>
+
+        <template v-if="firebaseCurrentUser">
+          <li class="nav-item">
+            <span class="nav-link text-success">
+              Firebase: {{ firebaseCurrentUser.email }}
+            </span>
+          </li>
+
+          <li class="nav-item">
+            <button
+              type="button"
+              class="nav-link logout-button"
+              @click="handleFirebaseLogout"
+            >
+              Firebase logout
+            </button>
+          </li>
+        </template>
 
         <li
           v-if="!isAuthenticated"

@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { ref } from 'vue'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD807h__f8jihuxg3tJVZtQF3bgxPoXOxc',
@@ -13,3 +14,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 
 export const firebaseAuth = getAuth(app)
+export const firebaseCurrentUser = ref(firebaseAuth.currentUser)
+
+onAuthStateChanged(firebaseAuth, (user) => {
+  firebaseCurrentUser.value = user
+})
