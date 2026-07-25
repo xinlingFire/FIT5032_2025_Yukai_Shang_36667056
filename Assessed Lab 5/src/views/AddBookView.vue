@@ -2,12 +2,14 @@
 import { ref } from 'vue'
 import { addDoc, collection } from 'firebase/firestore'
 import { db } from '../firebase/init'
+import BookList from '../components/BookList.vue'
 
 const isbn = ref('')
 const name = ref('')
 const isSaving = ref(false)
 const feedback = ref('')
 const feedbackType = ref('success')
+const bookListKey = ref(0)
 
 const addBook = async () => {
   const isbnNumber = Number(isbn.value)
@@ -30,6 +32,7 @@ const addBook = async () => {
 
     isbn.value = ''
     name.value = ''
+    bookListKey.value += 1
     feedbackType.value = 'success'
     feedback.value = `Book added successfully (document ID: ${bookDocument.id}).`
   } catch (error) {
@@ -94,6 +97,8 @@ const addBook = async () => {
             </p>
           </div>
         </section>
+
+        <BookList :key="bookListKey" />
       </div>
     </div>
   </main>
