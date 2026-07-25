@@ -5,6 +5,7 @@ import {
 
 import HomeView from '../views/HomeView.vue'
 import FirebaseSigninView from '../views/FirebaseSigninView.vue'
+import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import { isAuthenticated } from '../auth'
 
 const routes = [
@@ -43,6 +44,11 @@ const routes = [
     path: '/FireLogin',
     name: 'FireLogin',
     component: FirebaseSigninView
+  },
+  {
+    path: '/FireRegister',
+    name: 'FireRegister',
+    component: FirebaseRegisterView
   },
   {
     path: '/access-denied',
