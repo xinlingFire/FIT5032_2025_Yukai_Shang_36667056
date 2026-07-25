@@ -4,6 +4,7 @@ import {
 } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
+import AddBookView from '../views/AddBookView.vue'
 import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import { isAuthenticated } from '../auth'
@@ -13,6 +14,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/addbook',
+    name: 'addbook',
+    component: AddBookView
   },
   {
     path: '/about',
