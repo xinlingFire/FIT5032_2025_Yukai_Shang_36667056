@@ -4,6 +4,7 @@ import {
 } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
+import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import { isAuthenticated } from '../auth'
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
     meta: {
       guestOnly: true
     }
+  },
+  {
+    path: '/FireLogin',
+    name: 'FireLogin',
+    component: FirebaseSigninView
   },
   {
     path: '/access-denied',
