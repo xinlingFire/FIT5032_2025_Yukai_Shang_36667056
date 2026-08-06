@@ -155,7 +155,7 @@ const toggleMessage = () => {
       <h2>v-if & v-else</h2>
       <p>Toggle visibility based on a condition.</p>
       <!-- Activity 13: Toggle the message visibility when the button is clicked. -->
-      <button @click="showMessage = !showMessage">Toggle Message</button>
+      <button @click="toggleMessage">Toggle Message</button>
       <p class="message success" v-if="showMessage">✨ You're a Vue superstar! ✨</p>
       <p>Click the button to see a message.</p>
     </section>
