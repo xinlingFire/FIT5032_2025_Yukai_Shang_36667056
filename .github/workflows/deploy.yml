@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Assessed Lab 5/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,6 +20,10 @@ jobs:
       VITE_OPENWEATHER_API_KEY: ${{ secrets.VITE_OPENWEATHER_API_KEY }}
       VITE_COUNT_BOOKS_URL: ${{ vars.VITE_COUNT_BOOKS_URL }}
 
+    defaults:
+      run:
+        working-directory: Assessed Lab 5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,6 +33,7 @@ jobs:
         with:
           node-version: '20'
           cache: npm
+          cache-dependency-path: Assessed Lab 5/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -39,5 +48,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: dist
+          folder: Assessed Lab 5/dist
           clean: true
