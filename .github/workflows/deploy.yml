@@ -44,9 +44,13 @@ jobs:
       - name: Preserve Vue routes on GitHub Pages
         run: cp dist/index.html dist/404.html
 
+      # The deploy action's rsync command cannot safely handle the project's spaced path.
+      - name: Prepare deployment files
+        run: cp -R dist ../pages-dist
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
-          folder: Assessed Lab 5/dist
+          folder: pages-dist
           clean: true
