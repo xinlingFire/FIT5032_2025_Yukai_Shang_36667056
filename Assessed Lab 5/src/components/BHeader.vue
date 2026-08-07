@@ -89,6 +89,16 @@ const handleFirebaseLogout = async () => {
 
         <li class="nav-item">
           <RouterLink
+            to="/book-store"
+            class="nav-link"
+            active-class="active"
+          >
+            Book Store
+          </RouterLink>
+        </li>
+
+        <li class="nav-item">
+          <RouterLink
             to="/WeatherCheck"
             class="nav-link"
             active-class="active"
