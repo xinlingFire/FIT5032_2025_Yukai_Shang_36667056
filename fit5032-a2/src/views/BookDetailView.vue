@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import BookEngagementPanel from '../components/BookEngagementPanel.vue'
 import HealthSafetyNotice from '../components/HealthSafetyNotice.vue'
 import ResourceCover from '../components/ResourceCover.vue'
+import WorkshopBooking from '../components/WorkshopBooking.vue'
 import { formatWorkshopSchedule, getResourceType, normaliseResourceType } from '../data/resourceTypes'
 import { getBookById } from '../services/libraryStore'
 
@@ -55,6 +56,8 @@ const metadata = computed(() => {
     </section>
 
     <HealthSafetyNotice v-if="book" />
+
+    <WorkshopBooking v-if="book && normaliseResourceType(book.type) === 'workshop'" :workshop="book" />
 
     <BookEngagementPanel v-if="book" :key="book.id" :book="book" />
 

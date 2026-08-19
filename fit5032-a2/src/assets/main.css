@@ -818,6 +818,47 @@ a {
   color: var(--ink);
 }
 
+.table-tools,
+.planner-actions,
+.table-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.table-tools label { min-width: min(100%, 18rem); }
+.table-count { margin-right: auto; color: var(--muted); font-size: 0.9rem; }
+.sort-button { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: 800; text-align: left; }
+.sort-button:focus-visible, .planner-actions a:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.table-pagination { justify-content: end; color: var(--muted); font-size: 0.9rem; }
+
+.planner-panel,
+.booking-panel,
+.bulk-email {
+  margin: 2.25rem 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--blue);
+  border-radius: 4px;
+  background: #fff;
+}
+.planner-panel h2, .booking-panel h2, .bulk-email h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 1.65rem; }
+.planner-panel > p:not(.eyebrow), .booking-panel > p { color: var(--muted); line-height: 1.6; }
+.planner-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.status-info, .status-success, .status-error { margin: 1rem 0 0; font-weight: 700; line-height: 1.5; }
+.status-info { color: var(--muted); }
+.status-success { color: #17664e; }
+.status-error { color: #a33131; }
+.recipient-option { display: block; margin: 0.5rem 0; color: var(--ink); }
+.recipient-option small { color: var(--muted); }
+.bulk-email fieldset { max-height: 12rem; overflow: auto; margin-bottom: 1rem; padding: 0.75rem; border: 1px solid var(--line); }
+.engagement-chart { display: grid; gap: 0.75rem; margin: 1rem 0 1.5rem; }
+.chart-row { display: grid; grid-template-columns: minmax(9rem, 1fr) minmax(8rem, 2fr) auto; gap: 1rem; align-items: center; font-size: 0.88rem; }
+.chart-track { height: 0.75rem; background: #e5edeb; }
+.chart-bar { display: block; height: 100%; background: var(--blue); }
+
 .book-editor {
   margin: 0 0 1.5rem;
   padding: clamp(1.25rem, 3vw, 2rem);
@@ -1067,6 +1108,8 @@ a {
     align-items: start;
     flex-direction: column;
   }
+
+  .planner-grid, .chart-row { grid-template-columns: 1fr; gap: 0.45rem; }
 }
 
 @media (min-width: 768px) {

@@ -1,11 +1,17 @@
 <script setup>
 import { computed, ref } from 'vue'
 import BookManager from '../components/BookManager.vue'
+import BulkEmailPanel from '../components/BulkEmailPanel.vue'
+import InteractiveTable from '../components/InteractiveTable.vue'
 import { getRegisteredUsers } from '../services/auth'
+import { getBookings } from '../services/bookingStore'
+import { getRatingSummaries } from '../services/engagementStore'
 import { initialiseLibrary } from '../services/libraryStore'
 
 const members = ref(getRegisteredUsers())
 const books = ref(initialiseLibrary())
+const bookings = ref(getBookings())
+const ratings = ref(getRatingSummaries())
 
 const studentCount = computed(
   () => members.value.filter((member) => member.role === 'student').length
@@ -14,6 +20,21 @@ const studentCount = computed(
 const handleBooksChanged = (changedBooks) => {
   books.value = changedBooks
 }
+
+const memberRows = computed(() => members.value.map((member) => ({
+  ...member,
+  roleLabel: member.role === 'admin' ? 'Service coordinator' : 'Community member',
+  joined: new Date(member.createdAt).toLocaleDateString()
+})))
+const resourceRows = computed(() => books.value.map((book) => ({
+  id: book.id, title: book.title, type: book.type, provider: book.author,
+  topic: book.category, rating: ratings.value[book.id]?.average ?? 'No ratings'
+})))
+const engagementRows = computed(() => books.value.map((book) => ({
+  id: book.id, resource: book.title, bookings: bookings.value.filter((booking) => booking.workshopId === book.id).reduce((sum, booking) => sum + booking.seats, 0),
+  ratings: ratings.value[book.id]?.count ?? 0, average: ratings.value[book.id]?.average ?? '—'
+})))
+const topEngagement = computed(() => Math.max(1, ...engagementRows.value.map((row) => row.bookings + row.ratings)))
 </script>
 
 <template>
@@ -47,31 +68,18 @@ const handleBooksChanged = (changedBooks) => {
           <span>{{ members.length }} total</span>
         </div>
 
-        <div class="table-responsive">
-          <table class="table align-middle mb-0">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-                <th scope="col">Joined</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="member in members" :key="member.id">
-                <td>{{ member.name }}</td>
-                <td>{{ member.email }}</td>
-                <td>
-                  <span :class="['role-label', `role-${member.role}`]">
-                    {{ member.role === 'admin' ? 'Service coordinator' : 'Community member' }}
-                  </span>
-                </td>
-                <td>{{ new Date(member.createdAt).toLocaleDateString() }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <InteractiveTable title="Community members" filename="community-members" :rows="memberRows" :columns="[{ key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'roleLabel', label: 'Role' }, { key: 'joined', label: 'Joined' }]" />
       </section>
+
+      <section class="admin-table-section" aria-labelledby="analytics-heading">
+        <div class="admin-section-heading"><div><p class="eyebrow">F.1 innovation</p><h2 id="analytics-heading">Engagement analytics</h2></div></div>
+        <div class="engagement-chart" role="img" aria-label="Resource engagement chart showing bookings and ratings">
+          <div v-for="row in engagementRows" :key="row.id" class="chart-row"><span>{{ row.resource }}</span><div class="chart-track"><span class="chart-bar" :style="{ width: `${((row.bookings + row.ratings) / topEngagement) * 100}%` }"></span></div><strong>{{ row.bookings }} bookings · {{ row.ratings }} ratings</strong></div>
+        </div>
+        <InteractiveTable title="Resource engagement" filename="resource-engagement" :rows="engagementRows" :columns="[{ key: 'resource', label: 'Resource' }, { key: 'bookings', label: 'Booked seats' }, { key: 'ratings', label: 'Ratings' }, { key: 'average', label: 'Average rating' }]" />
+      </section>
+
+      <BulkEmailPanel :members="members" />
 
       <BookManager :books="books" @books-changed="handleBooksChanged" />
     </div>

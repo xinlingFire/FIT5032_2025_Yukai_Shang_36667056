@@ -4,6 +4,7 @@ import BookCard from '../components/BookCard.vue'
 import CatalogFilters from '../components/CatalogFilters.vue'
 import HealthSafetyNotice from '../components/HealthSafetyNotice.vue'
 import SuggestionForm from '../components/SuggestionForm.vue'
+import LocationPlanner from '../components/LocationPlanner.vue'
 import communityHealthWorkshop from '../assets/community-health-workshop.jpg'
 import { RESOURCE_TYPES, normaliseResourceType } from '../data/resourceTypes'
 import { getRatingSummaries } from '../services/engagementStore'
@@ -15,6 +16,7 @@ const selectedCategory = ref('')
 const selectedType = ref('')
 const ratingSummaries = ref(getRatingSummaries())
 const resourceTypes = RESOURCE_TYPES
+const workshopVenues = computed(() => [...new Set(books.value.filter((book) => normaliseResourceType(book.type) === 'workshop').map((book) => book.venue).filter(Boolean))])
 
 const categories = computed(() =>
   [...new Set(books.value.map((book) => book.category))].sort()
@@ -64,6 +66,8 @@ const resetFilters = () => {
 
     <section class="container catalogue-section">
       <HealthSafetyNotice />
+
+      <LocationPlanner :venues="workshopVenues" />
 
       <CatalogFilters
         v-model:search-term="searchTerm"

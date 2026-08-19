@@ -52,10 +52,23 @@ const touched = reactive({
 const editorIsOpen = ref(false)
 const editingId = ref(null)
 const hasSubmitted = ref(false)
+const tableSearch = ref('')
+const tablePage = ref(1)
+const tableSort = ref('title')
+const tableDirection = ref('asc')
 
 const formTitle = computed(() => (editingId.value ? 'Edit resource' : 'Add a resource'))
 const selectedType = computed(() => getResourceType(normaliseResourceType(form.type)))
 const isWorkshop = computed(() => selectedType.value.value === 'workshop')
+const managedBooks = computed(() => {
+  const query = tableSearch.value.trim().toLocaleLowerCase()
+  return [...props.books]
+    .filter((book) => !query || [book.title, book.author, book.category, book.type].some((value) => String(value).toLocaleLowerCase().includes(query)))
+    .sort((first, second) => String(first[tableSort.value] ?? '').localeCompare(String(second[tableSort.value] ?? '')) * (tableDirection.value === 'asc' ? 1 : -1))
+})
+const tablePages = computed(() => Math.max(1, Math.ceil(managedBooks.value.length / 10)))
+const pagedBooks = computed(() => managedBooks.value.slice((tablePage.value - 1) * 10, tablePage.value * 10))
+const setSort = (field) => { tableDirection.value = tableSort.value === field && tableDirection.value === 'asc' ? 'desc' : 'asc'; tableSort.value = field }
 const validationFields = computed(() => {
   const baseFields = ['type', 'title', 'author', 'category', 'description']
 
@@ -399,19 +412,22 @@ const handleDelete = (book) => {
       </button>
     </form>
 
+    <div class="table-tools">
+      <label><span class="visually-hidden">Search resources</span><input v-model="tableSearch" class="form-control" type="search" placeholder="Search resources" @input="tablePage = 1" /></label><span class="table-count">{{ managedBooks.length }} results</span>
+    </div>
     <div class="table-responsive">
       <table class="table align-middle mb-0">
         <thead>
           <tr>
-            <th scope="col">Resource</th>
-            <th scope="col">Type</th>
-            <th scope="col">Author, provider or host</th>
-            <th scope="col">Schedule or year</th>
+            <th scope="col"><button class="sort-button" type="button" @click="setSort('title')">Resource</button></th>
+            <th scope="col"><button class="sort-button" type="button" @click="setSort('type')">Type</button></th>
+            <th scope="col"><button class="sort-button" type="button" @click="setSort('author')">Author, provider or host</button></th>
+            <th scope="col"><button class="sort-button" type="button" @click="setSort('year')">Schedule or year</button></th>
             <th scope="col"><span class="visually-hidden">Actions</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="book in props.books" :key="book.id">
+          <tr v-for="book in pagedBooks" :key="book.id">
             <td>{{ book.title }}</td>
             <td>{{ getResourceType(normaliseResourceType(book.type)).label }}</td>
             <td>{{ book.author }}</td>
@@ -440,5 +456,6 @@ const handleDelete = (book) => {
         </tbody>
       </table>
     </div>
+    <nav v-if="tablePages > 1" class="table-pagination" aria-label="Resource table pagination"><button class="btn btn-sm btn-outline-secondary" type="button" :disabled="tablePage === 1" @click="tablePage--">Previous</button><span>Page {{ tablePage }} of {{ tablePages }}</span><button class="btn btn-sm btn-outline-secondary" type="button" :disabled="tablePage === tablePages" @click="tablePage++">Next</button></nav>
   </section>
 </template>

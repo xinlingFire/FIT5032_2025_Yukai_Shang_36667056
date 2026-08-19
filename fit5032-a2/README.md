@@ -15,6 +15,12 @@ For a production check:
 npm run build
 ```
 
+## Deploy to Vercel
+
+Import this repository in Vercel with `Vite` as the framework preset. Use `npm run build` as the build command and `dist` as the output directory. The included `vercel.json` keeps Vue Router history routes working after a browser refresh.
+
+The current prototype stores authentication, catalogue, bookings and engagement data in the browser. Vercel hosts the frontend but does not replace that storage. For production persistence, connect these service modules to Supabase or another database before submission.
+
 ## Included functionality
 
 - Responsive health resource hub with a community-health hero image
