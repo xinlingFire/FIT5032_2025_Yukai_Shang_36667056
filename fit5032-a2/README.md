@@ -19,9 +19,9 @@ npm run build
 
 Import this repository in Vercel with `Vite` as the framework preset. Use `npm run build` as the build command and `dist` as the output directory. The included `vercel.json` keeps Vue Router history routes working after a browser refresh.
 
-The current prototype stores authentication, catalogue, bookings and engagement data in the browser. Vercel hosts the frontend but does not replace that storage. For production persistence, connect these service modules to Supabase or another database before submission.
+The application uses Firebase Authentication and Firestore when the Firebase project is enabled and configured. It retains a browser cache fallback so the interface remains demonstrable while an external service is unavailable. Vercel hosts the Vue application and its `/api/sendBulkEmail` serverless endpoint.
 
-For the deployed Firebase email workflow, add `FIREBASE_API_KEY`, `ADMIN_EMAILS`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` in **Vercel Project Settings → Environment Variables**. The API verifies the sender's Firebase ID token and permits only addresses in `ADMIN_EMAILS`.
+For the deployed email workflow, add `FIREBASE_API_KEY`, `ADMIN_EMAILS`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` in **Vercel Project Settings → Environment Variables**. The API verifies the sender's Firebase ID token and permits only addresses in `ADMIN_EMAILS`. Use a verified Resend domain for delivery to arbitrary recipients; `onboarding@resend.dev` is suitable only for Resend's onboarding/testing limitations.
 
 ## Included functionality
 
@@ -29,21 +29,24 @@ For the deployed Firebase email workflow, add `FIREBASE_API_KEY`, `ADMIN_EMAILS`
 - Mixed catalogue of health books, practical guides and community workshops
 - Lucide book, document and presentation icons that distinguish each resource type
 - Keyword search by resource name or provider, plus resource-type and health-topic filtering
-- Workshop cards and detail views with date, time and venue information; no booking flow
-- Browser Local Storage initialisation and upgrade from earlier seed data
+- Workshop cards and detail views with date, time and venue information, date-capacity booking and booking management
+- Firebase-backed catalogue, booking and engagement data with a browser-cache fallback
 - General health-information and emergency `000` safety notices on the home and resource-detail pages
 - Resource suggestion form with name, email and text-length validation
-- Registration, login, logout and persistent local browser session
-- Community member and service coordinator roles with an administrator-only management area
-- Service coordinator creation, editing and deletion of books, guides and workshops with Local Storage persistence
-- Community member saved resources, individual 1-5 usefulness ratings and aggregate feedback scores
+- Registration, login, logout and persistent Firebase session when Firebase Email/Password is enabled
+- Community member and administrator roles with route guards and Firestore-backed profiles
+- Administrator creation, editing and deletion of books, guides and workshops
+- Community member saved resources, individual 1-5 usefulness ratings and aggregate feedback scores, synchronised to Firestore when available
+- Accessible resources and engagement tables with filtering, sorting, 10-row pagination, CSV/PDF export, charts and analytics
+- Administrator bulk-email composition with optional attachment, delivery feedback and Resend server-side integration
+- Mapbox place search and route planning when `VITE_MAPBOX_TOKEN` is configured, with external-map fallback
 - Not-found and access-denied pages
 
 ## Scope and safety
 
 The app provides general health-resource navigation only. It does not diagnose conditions, provide clinical advice, process payments, book appointments or handle emergencies. For urgent help in Australia, call `000`.
 
-The authentication and role checks are front-end demonstrations backed by browser Local Storage. They are suitable for the assessment prototype only, not for a real health service.
+Firebase security rules prevent client-side role escalation. The deployment remains an assessment application, so it must not be used to collect or act on sensitive health information.
 
 ## Demo service coordinator account
 
