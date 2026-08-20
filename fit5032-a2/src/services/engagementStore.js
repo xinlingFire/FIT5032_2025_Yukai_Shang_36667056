@@ -1,5 +1,9 @@
+import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { db } from './firebase'
+
 const FAVOURITES_STORAGE_KEY = 'open-shelf-library-favourites'
 const RATINGS_STORAGE_KEY = 'open-shelf-library-ratings'
+let ratingsHydrated = false
 
 const readList = (key) => {
   try {
@@ -18,10 +22,37 @@ const saveList = (key, values) => {
 const createId = () =>
   window.crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
 
-export const getFavouriteBookIds = (userId) =>
-  readList(FAVOURITES_STORAGE_KEY)
+const notify = () => window.dispatchEvent(new CustomEvent('engagement:updated'))
+const hydrateRatings = async () => {
+  if (!db || ratingsHydrated) return
+  ratingsHydrated = true
+  try {
+    const snapshot = await getDocs(collection(db, 'ratings'))
+    saveList(RATINGS_STORAGE_KEY, snapshot.docs.map((rating) => ({ id: rating.id, ...rating.data() })))
+    notify()
+  } catch {
+    // Reviews remain available in the local cache until cloud rules are deployed.
+  }
+}
+
+const hydrateFavourites = async (userId) => {
+  if (!db || !userId) return
+  try {
+    const snapshot = await getDocs(query(collection(db, 'favourites'), where('userId', '==', userId)))
+    const local = readList(FAVOURITES_STORAGE_KEY).filter((favourite) => favourite.userId !== userId)
+    saveList(FAVOURITES_STORAGE_KEY, [...local, ...snapshot.docs.map((favourite) => ({ id: favourite.id, ...favourite.data() }))])
+    notify()
+  } catch {
+    // Local cache remains available.
+  }
+}
+
+export const getFavouriteBookIds = (userId) => {
+  void hydrateFavourites(userId)
+  return readList(FAVOURITES_STORAGE_KEY)
     .filter((favourite) => favourite.userId === userId)
     .map((favourite) => favourite.bookId)
+}
 
 export const isBookFavourite = (userId, bookId) =>
   getFavouriteBookIds(userId).includes(bookId)
@@ -37,27 +68,34 @@ export const toggleFavourite = (userId, bookId) => {
       FAVOURITES_STORAGE_KEY,
       favourites.filter((favourite) => favourite !== existingFavourite)
     )
+    if (db) void deleteDoc(doc(db, 'favourites', existingFavourite.id)).catch(() => {})
+    notify()
     return false
   }
 
+  const favourite = {
+    id: createId(),
+    userId,
+    bookId,
+    createdAt: new Date().toISOString()
+  }
   saveList(FAVOURITES_STORAGE_KEY, [
     ...favourites,
-    {
-      id: createId(),
-      userId,
-      bookId,
-      createdAt: new Date().toISOString()
-    }
+    favourite
   ])
+  if (db) void setDoc(doc(db, 'favourites', favourite.id), favourite).catch(() => {})
+  notify()
   return true
 }
 
-export const getBookReviews = (bookId) =>
-  readList(RATINGS_STORAGE_KEY)
+export const getBookReviews = (bookId) => {
+  void hydrateRatings()
+  return readList(RATINGS_STORAGE_KEY)
     .filter((rating) => rating.bookId === bookId)
     .sort((firstRating, secondRating) =>
       secondRating.updatedAt.localeCompare(firstRating.updatedAt)
     )
+}
 
 export const getUserBookRating = (userId, bookId) =>
   getBookReviews(bookId).find((rating) => rating.userId === userId) ?? null
@@ -74,6 +112,7 @@ export const getRatingSummary = (bookId) => {
 }
 
 export const getRatingSummaries = () => {
+  void hydrateRatings()
   const summaries = {}
 
   readList(RATINGS_STORAGE_KEY).forEach((rating) => {
@@ -110,6 +149,8 @@ export const saveBookRating = ({ bookId, userId, score, comment }) => {
       : [...ratings, rating]
 
   saveList(RATINGS_STORAGE_KEY, updatedRatings)
+  if (db) void setDoc(doc(db, 'ratings', rating.id), rating).catch(() => {})
+  notify()
   return rating
 }
 
@@ -122,4 +163,5 @@ export const clearBookEngagement = (bookId) => {
     RATINGS_STORAGE_KEY,
     readList(RATINGS_STORAGE_KEY).filter((rating) => rating.bookId !== bookId)
   )
+  notify()
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import BookManager from '../components/BookManager.vue'
 import BulkEmailPanel from '../components/BulkEmailPanel.vue'
 import InteractiveTable from '../components/InteractiveTable.vue'
@@ -35,6 +35,11 @@ const engagementRows = computed(() => books.value.map((book) => ({
   ratings: ratings.value[book.id]?.count ?? 0, average: ratings.value[book.id]?.average ?? '—'
 })))
 const topEngagement = computed(() => Math.max(1, ...engagementRows.value.map((row) => row.bookings + row.ratings)))
+const refreshDashboard = () => { books.value = initialiseLibrary(); members.value = getRegisteredUsers(); bookings.value = getBookings(); ratings.value = getRatingSummaries() }
+onMounted(() => window.addEventListener('library:updated', refreshDashboard))
+onUnmounted(() => window.removeEventListener('library:updated', refreshDashboard))
+onMounted(() => window.addEventListener('bookings:updated', refreshDashboard))
+onUnmounted(() => window.removeEventListener('bookings:updated', refreshDashboard))
 </script>
 
 <template>

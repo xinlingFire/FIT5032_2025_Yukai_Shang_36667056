@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import BookCard from '../components/BookCard.vue'
 import CatalogFilters from '../components/CatalogFilters.vue'
 import HealthSafetyNotice from '../components/HealthSafetyNotice.vue'
@@ -44,6 +44,10 @@ const resetFilters = () => {
   selectedCategory.value = ''
   selectedType.value = ''
 }
+
+const refreshLibrary = () => { books.value = initialiseLibrary(); ratingSummaries.value = getRatingSummaries() }
+onMounted(() => window.addEventListener('library:updated', refreshLibrary))
+onUnmounted(() => window.removeEventListener('library:updated', refreshLibrary))
 </script>
 
 <template>

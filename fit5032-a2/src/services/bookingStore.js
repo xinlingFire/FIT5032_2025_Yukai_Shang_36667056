@@ -1,4 +1,7 @@
 const KEY = 'open-shelf-workshop-bookings'
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import { db } from './firebase'
+let cloudHydrationStarted = false
 
 const read = () => {
   try {
@@ -11,7 +14,21 @@ const read = () => {
 
 const save = (values) => window.localStorage.setItem(KEY, JSON.stringify(values))
 
-export const getBookings = () => read()
+const notify = () => window.dispatchEvent(new CustomEvent('bookings:updated'))
+const hydrate = async () => {
+  if (!db || cloudHydrationStarted) return
+  cloudHydrationStarted = true
+  try {
+    const snapshot = await getDocs(collection(db, 'bookings'))
+    const bookings = snapshot.docs.map((booking) => ({ id: booking.id, ...booking.data() }))
+    save(bookings)
+    notify()
+  } catch {
+    // Keep the local cache when the cloud collection is not available yet.
+  }
+}
+
+export const getBookings = () => { void hydrate(); return read() }
 
 export const getBookingCount = (workshopId) =>
   read().filter((booking) => booking.workshopId === workshopId).length
@@ -39,5 +56,7 @@ export const createBooking = ({ workshop, user, seats }) => {
     createdAt: new Date().toISOString()
   }
   save([...read(), booking])
+  if (db) void addDoc(collection(db, 'bookings'), booking).catch(() => {})
+  notify()
   return booking
 }

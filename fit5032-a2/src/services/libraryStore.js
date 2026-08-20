@@ -1,5 +1,7 @@
 import { seedBooks } from '../data/seedBooks'
 import { normaliseResourceType } from '../data/resourceTypes'
+import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore'
+import { db } from './firebase'
 
 const BOOKS_STORAGE_KEY = 'open-shelf-library-books'
 const RESOURCE_SCHEMA_VERSION_KEY = 'open-shelf-health-resource-schema-version'
@@ -15,12 +17,37 @@ const LEGACY_BOOK_IDS = new Set([
   'the-midnight-library'
 ])
 const SEED_RESOURCE_IDS = new Set(seedBooks.map((book) => book.id))
+let cloudHydrationStarted = false
 
 const cloneBooks = (books) => books.map((book) => ({ ...book }))
 
 const saveBooks = (books) => {
   window.localStorage.setItem(BOOKS_STORAGE_KEY, JSON.stringify(books))
   return cloneBooks(books)
+}
+
+const notifyLibraryChanged = () => window.dispatchEvent(new CustomEvent('library:updated'))
+
+const persistResource = async (resource) => {
+  if (!db) return
+  await setDoc(doc(db, 'resources', resource.id), { ...resource, updatedAt: new Date().toISOString() })
+}
+
+const hydrateFromFirestore = async () => {
+  if (!db || cloudHydrationStarted) return
+  cloudHydrationStarted = true
+  try {
+    const snapshot = await getDocs(collection(db, 'resources'))
+    if (!snapshot.size) {
+      await Promise.all(seedBooks.map((resource) => persistResource(resource)))
+      return
+    }
+    const cloudBooks = snapshot.docs.map((resource) => normaliseStoredResource({ id: resource.id, ...resource.data() }))
+    saveBooks(cloudBooks)
+    notifyLibraryChanged()
+  } catch {
+    // Local cache remains available when Firestore rules or network are unavailable.
+  }
 }
 
 const saveSchemaVersion = () => {
@@ -75,6 +102,7 @@ const isLegacyBookCatalogue = (books) =>
   books.some((book) => LEGACY_BOOK_IDS.has(book.id))
 
 export const initialiseLibrary = () => {
+  void hydrateFromFirestore()
   const storedBooks = window.localStorage.getItem(BOOKS_STORAGE_KEY)
 
   if (!storedBooks) {
@@ -112,7 +140,10 @@ export const createBook = (bookDetails) => {
     id: createBookId(bookDetails.title, books)
   }
 
-  return saveBooks([...books, book])
+  const updatedBooks = saveBooks([...books, book])
+  void persistResource(book)
+  notifyLibraryChanged()
+  return updatedBooks
 }
 
 export const updateBook = (id, bookDetails) => {
@@ -121,10 +152,16 @@ export const updateBook = (id, bookDetails) => {
     book.id === id ? { ...book, ...bookDetails, id } : book
   )
 
+  const updatedBook = updatedBooks.find((book) => book.id === id)
+  if (updatedBook) void persistResource(updatedBook)
+  notifyLibraryChanged()
   return saveBooks(updatedBooks)
 }
 
 export const removeBook = (id) => {
   const books = initialiseLibrary()
-  return saveBooks(books.filter((book) => book.id !== id))
+  const updatedBooks = saveBooks(books.filter((book) => book.id !== id))
+  if (db) void deleteDoc(doc(db, 'resources', id))
+  notifyLibraryChanged()
+  return updatedBooks
 }

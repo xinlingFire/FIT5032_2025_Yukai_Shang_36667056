@@ -12,6 +12,7 @@
     "@lucide/vue": "^1.26.0",
     "bootstrap": "^5.3.8",
     "firebase": "^12.17.1",
+    "mapbox-gl": "^3.28.1",
     "vue": "^3.5.38",
     "vue-router": "^4.6.4"
   },
