@@ -1,4 +1,7 @@
 import { computed, ref } from 'vue'
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth'
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
+import { auth, db, firebaseEnabled } from './firebase'
 
 const USERS_STORAGE_KEY = 'open-shelf-library-users'
 const SESSION_STORAGE_KEY = 'open-shelf-library-session'
@@ -72,6 +75,36 @@ const hashPassword = async (password) => {
 const currentUser = ref(loadCurrentUser())
 const isAuthenticated = computed(() => currentUser.value !== null)
 
+const firebasePublicUser = async (user) => {
+  if (!user) return null
+  const token = await user.getIdTokenResult()
+  let profile = null
+  if (db) {
+    const snapshot = await getDoc(doc(db, 'profiles', user.uid))
+    profile = snapshot.exists() ? snapshot.data() : null
+  }
+  return {
+    id: user.uid,
+    name: profile?.name || user.displayName || user.email?.split('@')[0] || 'Community member',
+    email: user.email || '',
+    role: token.claims.admin === true || profile?.role === 'admin' ? 'admin' : 'student',
+    createdAt: profile?.createdAt?.toDate?.()?.toISOString?.() || user.metadata.creationTime || new Date().toISOString()
+  }
+}
+
+if (firebaseEnabled && auth) {
+  onAuthStateChanged(auth, async (user) => {
+    try {
+      const publicUser = await firebasePublicUser(user)
+      currentUser.value = publicUser
+      if (publicUser) window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({ userId: publicUser.id }))
+      else window.localStorage.removeItem(SESSION_STORAGE_KEY)
+    } catch {
+      // Keep the local demonstration session if Firebase is unavailable.
+    }
+  })
+}
+
 const startSession = (user) => {
   const publicUser = toPublicUser(user)
   currentUser.value = publicUser
@@ -79,6 +112,19 @@ const startSession = (user) => {
 }
 
 export const register = async ({ name, email, password }) => {
+  if (firebaseEnabled && auth) {
+    try {
+      const credential = await createUserWithEmailAndPassword(auth, normaliseEmail(email), password)
+      await updateProfile(credential.user, { displayName: name.trim() })
+      if (db) await setDoc(doc(db, 'profiles', credential.user.uid), { name: name.trim(), email: normaliseEmail(email), role: 'student', createdAt: serverTimestamp() })
+      currentUser.value = await firebasePublicUser(credential.user)
+      return { success: true }
+    } catch (error) {
+      if (error.code !== 'auth/configuration-not-found' && error.code !== 'auth/operation-not-allowed') {
+        return { success: false, message: error.code === 'auth/email-already-in-use' ? 'An account already exists for this email address.' : 'Firebase could not create the account. Check that Email/Password sign-in is enabled.' }
+      }
+    }
+  }
   const users = readUsers()
   const normalisedEmail = normaliseEmail(email)
   const existingUser = users.find((user) => user.email === normalisedEmail)
@@ -104,6 +150,17 @@ export const register = async ({ name, email, password }) => {
 }
 
 export const login = async ({ email, password }) => {
+  if (firebaseEnabled && auth) {
+    try {
+      const credential = await signInWithEmailAndPassword(auth, normaliseEmail(email), password)
+      currentUser.value = await firebasePublicUser(credential.user)
+      return { success: true }
+    } catch (error) {
+      if (error.code !== 'auth/configuration-not-found' && error.code !== 'auth/operation-not-allowed' && error.code !== 'auth/user-not-found') {
+        return { success: false, message: 'The email address or password is incorrect.' }
+      }
+    }
+  }
   const user = readUsers().find((storedUser) => storedUser.email === normaliseEmail(email))
 
   if (!user || user.passwordHash !== (await hashPassword(password))) {
@@ -117,6 +174,7 @@ export const login = async ({ email, password }) => {
 export const logout = () => {
   currentUser.value = null
   window.localStorage.removeItem(SESSION_STORAGE_KEY)
+  if (firebaseEnabled && auth) signOut(auth).catch(() => {})
 }
 
 export const getRegisteredUsers = () =>

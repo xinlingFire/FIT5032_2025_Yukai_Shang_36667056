@@ -21,6 +21,8 @@ Import this repository in Vercel with `Vite` as the framework preset. Use `npm r
 
 The current prototype stores authentication, catalogue, bookings and engagement data in the browser. Vercel hosts the frontend but does not replace that storage. For production persistence, connect these service modules to Supabase or another database before submission.
 
+For the deployed Firebase email workflow, add `FIREBASE_API_KEY`, `ADMIN_EMAILS`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` in **Vercel Project Settings → Environment Variables**. The API verifies the sender's Firebase ID token and permits only addresses in `ADMIN_EMAILS`.
+
 ## Included functionality
 
 - Responsive health resource hub with a community-health hero image
