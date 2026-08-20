@@ -48,10 +48,19 @@ The app provides general health-resource navigation only. It does not diagnose c
 
 Firebase security rules prevent client-side role escalation. The deployment remains an assessment application, so it must not be used to collect or act on sensitive health information.
 
-## Demo service coordinator account
+## Administrator accounts
+
+### Production Firebase administrator
+
+- Email: `ysha0106@student.monash.edu`
+- Password: configured privately in Firebase Authentication; never commit or publish it.
+- The matching Firestore `profiles/{uid}` document must contain `role: "admin"`.
+
+### Local fallback demonstration account
 
 - Email: `admin@openshelf.local`
 - Password: `AdminPass2026!`
+- This account is only used when Firebase Authentication is unavailable. It does not provide a Firebase ID token, so the deployed Resend email endpoint will reject it.
 
 ## Local data upgrade
 
