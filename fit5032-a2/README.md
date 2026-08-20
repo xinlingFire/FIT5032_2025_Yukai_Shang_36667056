@@ -1,6 +1,6 @@
 # Open Shelf Health Connect
 
-Open Shelf Health Connect is a responsive Vue 3 health-resource hub for newly arrived migrant communities in Australia. It brings together health books, practical guides and community workshops that members can browse, save and rate. It provides general information only and is not a medical advice, diagnosis or emergency-response service.
+Open Shelf Health Connect is a Vue 3 application for browsing health books, practical guides and community workshops. Members can search, save and rate resources. It provides general information only and is not a medical advice, diagnosis or emergency-response service.
 
 ## Run locally
 
@@ -19,7 +19,7 @@ npm run build
 
 Import this repository in Vercel with `Vite` as the framework preset. Use `npm run build` as the build command and `dist` as the output directory. The included `vercel.json` keeps Vue Router history routes working after a browser refresh.
 
-The application uses Firebase Authentication and Firestore when the Firebase project is enabled and configured. It retains a browser cache fallback so the interface remains demonstrable while an external service is unavailable. Vercel hosts the Vue application and its `/api/sendBulkEmail` serverless endpoint.
+The application uses Firebase Authentication and Firestore when the Firebase project is enabled and configured. A browser-cache fallback is used when an external service is unavailable. Vercel hosts the Vue application and its `/api/sendBulkEmail` serverless endpoint.
 
 For the deployed email workflow, add `FIREBASE_API_KEY`, `ADMIN_EMAILS`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` in **Vercel Project Settings → Environment Variables**. The API verifies the sender's Firebase ID token and permits only addresses in `ADMIN_EMAILS`. Use a verified Resend domain for delivery to arbitrary recipients; `onboarding@resend.dev` is suitable only for Resend's onboarding/testing limitations.
 
@@ -46,7 +46,7 @@ For the deployed email workflow, add `FIREBASE_API_KEY`, `ADMIN_EMAILS`, `RESEND
 
 The app provides general health-resource navigation only. It does not diagnose conditions, provide clinical advice, process payments, book appointments or handle emergencies. For urgent help in Australia, call `000`.
 
-Firebase security rules prevent client-side role escalation. The deployment remains an assessment application, so it must not be used to collect or act on sensitive health information.
+Firebase security rules prevent client-side role escalation. Do not use the application to collect or act on sensitive health information.
 
 ## Administrator accounts
 
@@ -65,7 +65,3 @@ Firebase security rules prevent client-side role escalation. The deployment rema
 ## Local data upgrade
 
 When the app first loads this version, the older catalogue is upgraded to the mixed resource directory. The legacy Local Storage key is intentionally retained to avoid changing the existing data-flow implementation.
-
-## Visual acknowledgement
-
-The homepage community-workshop image is sourced from Unsplash for this assessment prototype. Any final submission should retain appropriate attribution and declare all external or AI-assisted content in the assessment acknowledgement.
