@@ -15,6 +15,16 @@ const token = import.meta.env.VITE_MAPBOX_TOKEN
 const tokenConfigured = Boolean(token)
 const mapSearchUrl = computed(() => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destination.value)}`)
 const directionsUrl = computed(() => `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin.value)}&destination=${encodeURIComponent(destination.value)}&travelmode=transit`)
+const fallbackVenueCoordinates = {
+  'Fitzroy Community Hub, Room 2': { latitude: -37.7984, longitude: 144.9787 },
+  'Carlton Neighbourhood Learning Centre': { latitude: -37.8002, longitude: 144.9671 }
+}
+const fallbackMapUrl = computed(() => {
+  const coordinates = fallbackVenueCoordinates[destination.value] ?? { latitude: -37.8136, longitude: 144.9631 }
+  const longitudeOffset = 0.012; const latitudeOffset = 0.008
+  const bbox = [coordinates.longitude - longitudeOffset, coordinates.latitude - latitudeOffset, coordinates.longitude + longitudeOffset, coordinates.latitude + latitudeOffset].join('%2C')
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${coordinates.latitude}%2C${coordinates.longitude}`
+})
 
 const geocode = async (query) => {
   const coordinateMatch = String(query).match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/)
@@ -83,7 +93,8 @@ onBeforeUnmount(() => { clearMarkers(); map.value?.remove() })
     <p>Search a workshop venue and calculate a route with Mapbox.</p>
     <div class="planner-grid"><div><label class="form-label" for="planner-destination">Destination</label><select id="planner-destination" v-model="destination" class="form-select"><option v-for="venue in venues" :key="venue" :value="venue">{{ venue }}</option></select></div><div><label class="form-label" for="planner-origin">Starting point</label><input id="planner-origin" v-model="origin" class="form-control" placeholder="Enter suburb or address" /></div></div>
     <div v-if="tokenConfigured" ref="mapElement" class="mapbox-map" aria-label="Interactive Mapbox map"></div>
+    <iframe v-else class="mapbox-map fallback-map" :src="fallbackMapUrl" title="OpenStreetMap venue map" loading="lazy"></iframe>
     <div class="planner-actions"><button class="btn btn-outline-secondary" type="button" @click="useLocation">Use my location</button><template v-if="tokenConfigured"><button class="btn btn-outline-secondary" type="button" @click="searchPlace">Search place</button><button class="btn btn-primary" type="button" @click="planRoute">Calculate route</button></template><template v-else><a class="btn btn-outline-secondary" :href="mapSearchUrl" target="_blank" rel="noreferrer">Search map</a><a class="btn btn-primary" :class="{ disabled: !origin }" :href="origin ? directionsUrl : undefined" target="_blank" rel="noreferrer" @click.prevent="!origin && (message = 'Add a starting point before requesting directions.')">Plan transit route</a></template></div>
-    <p v-if="routeSummary" class="status-success" role="status">{{ routeSummary }}</p><p class="status-info" role="status">{{ message || (tokenConfigured ? 'Mapbox is ready. Search a place or calculate a route.' : 'Mapbox is not configured. Add VITE_MAPBOX_TOKEN to enable the embedded map; external map links remain available.') }}</p>
+    <p v-if="routeSummary" class="status-success" role="status">{{ routeSummary }}</p><p class="status-info" role="status">{{ message || (tokenConfigured ? 'Mapbox is ready. Search a place or calculate a route.' : 'OpenStreetMap shows the selected venue. Use Search map or Plan transit route for live place search and trip planning.') }}</p>
   </section>
 </template>
