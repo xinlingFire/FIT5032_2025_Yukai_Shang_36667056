@@ -39,6 +39,11 @@ const saveUsers = (users) => {
   window.localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users))
 }
 
+const cacheRegisteredUser = (user) => {
+  const users = readUsers().filter((storedUser) => storedUser.id !== user.id)
+  saveUsers([...users, user])
+}
+
 const toPublicUser = ({ id, name, email, role, createdAt }) => ({
   id,
   name,
@@ -118,6 +123,7 @@ export const register = async ({ name, email, password }) => {
       await updateProfile(credential.user, { displayName: name.trim() })
       if (db) await setDoc(doc(db, 'profiles', credential.user.uid), { name: name.trim(), email: normaliseEmail(email), role: 'student', createdAt: serverTimestamp() })
       currentUser.value = await firebasePublicUser(credential.user)
+      cacheRegisteredUser(currentUser.value)
       return { success: true }
     } catch (error) {
       if (error.code !== 'auth/configuration-not-found' && error.code !== 'auth/operation-not-allowed') {
