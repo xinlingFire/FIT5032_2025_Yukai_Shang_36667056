@@ -160,6 +160,7 @@ export const login = async ({ email, password }) => {
     try {
       const credential = await signInWithEmailAndPassword(auth, normaliseEmail(email), password)
       currentUser.value = await firebasePublicUser(credential.user)
+      cacheRegisteredUser(currentUser.value)
       return { success: true }
     } catch (error) {
       if (error.code !== 'auth/configuration-not-found' && error.code !== 'auth/operation-not-allowed' && error.code !== 'auth/user-not-found') {
