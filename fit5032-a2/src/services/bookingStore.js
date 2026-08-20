@@ -31,7 +31,9 @@ const hydrate = async () => {
 export const getBookings = () => { void hydrate(); return read() }
 
 export const getBookingCount = (workshopId) =>
-  read().filter((booking) => booking.workshopId === workshopId).length
+  read()
+    .filter((booking) => booking.workshopId === workshopId)
+    .reduce((total, booking) => total + Math.max(1, Number(booking.seats) || 1), 0)
 
 export const createBooking = ({ workshop, user, seats }) => {
   const capacity = Number(workshop.capacity ?? 20)
